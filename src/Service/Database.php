@@ -17,7 +17,7 @@ final class Database
         $servername = "localhost",
         $username = "root",
         $password = "",
-        $dbname = "test"
+        $dbname = "blog"
     ) {
         // Create bddection
         $this->bdd = new mysqli($servername, $username, $password, $dbname);
@@ -50,13 +50,13 @@ final class Database
     }
     public function getData()
     {
-        $sql = "SELECT titre, contenu, date_creation FROM billets";
+        $sql = "SELECT id_author, title, short_content,content, date_created FROM articles";
         $result = $this->bdd->query($sql);
 
         if ($result !== false && $result->num_rows > 0) {
             // output data of each row
             while ($row = $result->fetch_assoc()) {
-                echo "le titre: " . $row["titre"] . "<br> - Contenu: " . $row["contenu"] . "<br> " . $row["date_creation"] . "<br>";
+                echo "le titre: " . $row["title"] . "<br> - Contenu: " . $row["content"] . "<br> " . $row["date_created"] . "<br>";
             }
         } else {
             echo "0 results";

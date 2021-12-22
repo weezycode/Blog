@@ -77,9 +77,17 @@ final class Comment
         }
     }
 
-    public function setPseudoUser()
+    public function setPseudoUser($pseudo_user = NULL)
     {
+        if (is_string($pseudo_user)) {
+            return $this->pseudo_user = $pseudo_user;
+        } else {
+            if (is_int($pseudo_user)) {
+                return $this->pseudo_user = $this->getPseudoUser();
+            }
+        }
     }
+
 
     public function setContent(string $content): self
     {
