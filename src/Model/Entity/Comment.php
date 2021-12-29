@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use DateTime;
 
 final class Comment
 {
@@ -13,20 +14,20 @@ final class Comment
         private string $pseudo_user, // TODO l'entity User serait plus approprié
         private int $id_post,
         private string $content,
-        private $date_insert,
-        private $date_update,
+        private DateTime $date_comment,
         private string $display_status
 
 
     ) {
     }
 
-    // Getters
+    //------------------------------------Getters------------------------------------------
 
     public function getId(): int
     {
         return $this->id;
     }
+
     public function getIdUser(): int
     {
         return $this->id_user;
@@ -36,6 +37,7 @@ final class Comment
     {
         return $this->pseudo_user;
     }
+
     public function getIdPost(): int
     {
         return $this->id_post;
@@ -46,14 +48,9 @@ final class Comment
         return $this->content;
     }
 
-    public function getDateInsert()
+    public function getDatecomment()
     {
-        return $this->date_insert;
-    }
-
-    public function getUpdate()
-    {
-        return $this->date_update;
+        return $this->date_comment;
     }
 
     public function getDisplayStatus()
@@ -62,13 +59,22 @@ final class Comment
     }
 
 
+    //----------------------------------Setters-----------------------------------------
+    public function setId(int $id)
+    {
+        if ($id > 0) {
+            return $this->id = $id;
+        }
+    }
 
 
-    //Setters
+    // Set id user 
+
     /**
      * @param mixed $id_user
      * 
      */
+
 
     public function setIdUser(int $id_user)
     {
@@ -77,17 +83,34 @@ final class Comment
         }
     }
 
-    public function setPseudoUser($pseudo_user = NULL)
+    // Set pseudo user 
+
+    public function setPseudoUser(string $pseudo_user = NULL)
     {
         if (is_string($pseudo_user)) {
             return $this->pseudo_user = $pseudo_user;
         } else {
             if (is_int($pseudo_user)) {
-                return $this->pseudo_user = $this->getPseudoUser();
+                return $this->pseudo_user = $this->getIdUser();
             }
         }
     }
 
+    // Set id article 
+
+    /**
+     * @param mixed $id_post
+     * 
+     */
+
+    public function setIdPost(int $id_post)
+    {
+        if (isset($this->id_post) && $this->id_post > 0) {
+            return $this->id_post = htmlspecialchars($id_post);
+        }
+    }
+
+    // Set content 
 
     public function setContent(string $content): self
     {
@@ -95,5 +118,23 @@ final class Comment
             $this->content = htmlspecialchars($content);
             return $this;
         }
+    }
+
+    // Set Date comment
+
+    public function SetDatecomment($date_comment)
+    {
+        if (isset($this->date_comment)) {
+            return $this->date_comment = $date_comment;
+        } else {
+            $date_comment = new DateTime();
+        }
+    }
+
+    // Set Display status
+
+    public function setDisplayStatus($display_status)
+    {
+        return $this->display_status = htmlspecialchars($display_status);
     }
 }
