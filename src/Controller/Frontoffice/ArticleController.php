@@ -6,12 +6,12 @@ namespace  App\Controller\Frontoffice;
 
 use App\View\View;
 use App\Service\Http\Response;
-use App\Model\Repository\PostRepository;
+use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
 
-final class PostController
+final class ArticleController
 {
-    public function __construct(private PostRepository $postRepository, private View $view)
+    public function __construct(private ArticleRepository $postRepository, private View $view)
     {
     }
 
@@ -19,10 +19,10 @@ final class PostController
     {
         $response = new Response('<h1>faire une redirection vers la page d\'erreur, ce post n\'existe pas</h1><a href="index.php?action=posts">Liste des posts</a><br>', 404);
 
-        $post = $this->postRepository->findOneBy(['id' => $id]);
+        $post = $this->postRepository->findAll(['id' => $id]);
 
         if ($post !== null) {
-            $comments = $commentRepository->findBy(['idPost' => $id]);
+            $comments = $commentRepository->findByPost(['idPost' => $id]);
             $response = new Response($this->view->render(
                 [
                     'template' => 'post',

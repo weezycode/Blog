@@ -10,12 +10,12 @@ final class Comment
 {
     public function __construct(
         private int $id,
-        private int $id_user,
-        private string $pseudo_user, // TODO l'entity User serait plus approprié
-        private int $id_post,
+        private int $IdUser,
+        private string $pseudoUser, // TODO l'entity User serait plus approprié
+        private int $idPost,
         private string $content,
-        private DateTime $date_comment,
-        private string $display_status
+        private DateTime $dateComment,
+        private string $displayStatus
 
 
     ) {
@@ -30,17 +30,17 @@ final class Comment
 
     public function getIdUser(): int
     {
-        return $this->id_user;
+        return $this->IdUser;
     }
 
     public function getPseudoUser(): string
     {
-        return $this->pseudo_user;
+        return $this->pseudoUser;
     }
 
     public function getIdPost(): int
     {
-        return $this->id_post;
+        return $this->idPost;
     }
 
     public function getContent(): string
@@ -50,91 +50,71 @@ final class Comment
 
     public function getDatecomment()
     {
-        return $this->date_comment;
+        return $this->dateComment;
     }
 
     public function getDisplayStatus()
     {
-        return $this->display_status;
+        return $this->displayStatus;
     }
 
 
     //----------------------------------Setters-----------------------------------------
-    public function setId(int $id)
-    {
-        if ($id > 0) {
-            return $this->id = $id;
-        }
-    }
-
 
     // Set id user 
 
     /**
-     * @param mixed $id_user
+     * @param mixed $IdUser
      * 
      */
 
 
-    public function setIdUser(int $id_user)
+    public function setIdUser(int $IdUser)
     {
-        if (isset($this->id_user)) {
-            return $this->id_user = htmlspecialchars($id_user);
-        }
+        return $this->IdUser = $IdUser;
     }
 
     // Set pseudo user 
 
-    public function setPseudoUser(string $pseudo_user = NULL)
+    public function setPseudoUser(string $pseudoUser = NULL)
     {
-        if (is_string($pseudo_user)) {
-            return $this->pseudo_user = $pseudo_user;
-        } else {
-            if (is_int($pseudo_user)) {
-                return $this->pseudo_user = $this->getIdUser();
-            }
-        }
+        $this->pseudoUser = $pseudoUser;
+        return $this;
     }
 
     // Set id article 
 
     /**
-     * @param mixed $id_post
+     * @param mixed $idPost
      * 
      */
 
-    public function setIdPost(int $id_post)
+    public function setIdPost(int $idPost)
     {
-        if (isset($this->id_post) && $this->id_post > 0) {
-            return $this->id_post = htmlspecialchars($id_post);
-        }
+        return $this->idPost = $idPost;
     }
 
     // Set content 
 
     public function setContent(string $content): self
     {
-        if (isset($this->content)) {
-            $this->content = htmlspecialchars($content);
-            return $this;
-        }
+        $this->content = $content;
+        return $this;
     }
 
     // Set Date comment
 
-    public function SetDatecomment($date_comment)
+    public function SetDatecomment(DateTime $dateComment)
     {
-        if (isset($this->date_comment)) {
-            return $this->date_comment = $date_comment;
-        } else {
-            $date_comment = new DateTime();
-        }
+        $this->dateComment = $dateComment;
+        return $this;
     }
 
     // Set Display status
 
-    public function setDisplayStatus($display_status)
+    public function setDisplayStatus(string $displayStatus)
     {
-        return $this->display_status = htmlspecialchars($display_status);
+        $this->displayStatus = $displayStatus;
+        return $this;
     }
 }
