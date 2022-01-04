@@ -13,11 +13,11 @@ final class CommentRepository
 
 {
     //protected $table = "comments";
-    private $bdd;
+    private PDO $bdd;
 
-    public function __construct()
+    public function __construct(Database $database)
     {
-        $this->bdd->setFetchMode(PDO::FETCH_CLASS, Database::class);
+        $this->bdd = $database->getPDO();
     }
 
     public function findId($id)
@@ -33,8 +33,7 @@ final class CommentRepository
 
     public function findAll(): array
     {
-        $req = $this->bdd->prepare('SELECT * FROM comments ORDER BY date_comment DESC');
-
+        $req = $this->bdd->prepare('SELECT * FROM comment ORDER BY date_comment DESC');
         $req->execute();
         $req->setFetchMode(PDO::FETCH_CLASS, Comment::class);
 
@@ -43,19 +42,19 @@ final class CommentRepository
 
     public function findByPost($id)
     {
-        $data = $this->bdd->prepare('SELECT * from comments where id_article = :id_article ORDER BY date_comment DESC');
-        $data->binValue(':id_article', (int) $id);
-        $data->execute();
-        $data->setFetchMode(PDO::FETCH_CLASS, Comment::class);
+        $req = $this->bdd->prepare('SELECT * from comment where id_article = :idArticle ORDER BY date_comment DESC');
+        $req->bindValue(':id_article', (int) $id);
+        $req->execute();
+        $req->setFetchMode(PDO::FETCH_CLASS, Comment::class);
 
-        if ($data === null) {
+        if ($req === null) {
             return null;
         }
 
         // réfléchir à l'hydratation des entités;
-        $comment = $this->data->fetchAll();
+        $comment = $this->req->fetchAll();
         foreach ($comment as $comments) {
-            $commentRepository = new UserRepository();
+            $commentRepository = new UserRepository($comments);
             $comments->setPseudoUser($commentRepository->find($comments->getUserId()));
         }
         return $comments;
@@ -69,19 +68,19 @@ final class CommentRepository
 
     public function create(Comment $comment)
     {
-        $req = $this->bdd->prepare('INSERT INTO comments (id_user, content, id_article, display_status, date_comment) VALUES(:id_user, :content, :id_article, :display_status, NOW())');
+        $req = $this->bdd->prepare('INSERT INTO comment (id_user, content, id_article, display_status, date_comment) VALUES(:idUser, :content, :idArticle, :displayStatus, NOW())');
 
-        $req->bindValue(':id_user', $comment->getIdUser());
+        $req->bindValue(':idUser', $comment->getIdUser());
         $req->bindValue(':content', $comment->getContent());
-        $req->bindValue(':id_article', $comment->getIdPost());
-        $req->bindValue(':display_status', $comment->getDisplayStatus());
+        $req->bindValue(':idArticle', $comment->getIdPost());
+        $req->bindValue(':displayStatus', $comment->getDisplayStatus());
 
         $req->execute();
     }
 
     public function delete(Comment $comment)
     {
-        $req = $this->bdd->prepare('DELETE FROM comments WHERE id = :id');
+        $req = $this->bdd->prepare('DELETE FROM comment WHERE id = :id');
         $req->bindValue(':id', $comment->getId());
         $req->execute();
     }
