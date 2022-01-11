@@ -1,20 +1,24 @@
-{% extends "/frontoffice/base.html.twig" %}
+{# {% extends "/frontoffice/home.html.twig" %} #}
 
 {% block title %}post.title{% endblock %}
 
 {% block content %} 
     <article>
-        <h2>{{ post.title }}</h2>
-        <p>{{ post.content }}</p>
+    
+            <h2>title = {{ post.title }}</h2>
+            <p>text = {{ post.content}}</p>
+             <h4> Auteur = {{post.pseudo}} </h4>
+             <span> Date de Publication :{{post.DateCreated}} </span>
     </article>
 
     <section>
         <h3>Commentaires</h3>
         {% if comments %}
             {% for comment in comments %}
-                <p>id =  {{ comment.id }}<br>
-                pseudo = {{ comment.pseudo }}<br>
+                <p>id =  {{ comment.idPost }}<br>
+                pseudo = {{ comment.pseudoUser }}<br>
                 text = {{ comment.content }}</p>
+               
             {% endfor %}
         {% else %}
             <h4>Aucun commentaires</h4>

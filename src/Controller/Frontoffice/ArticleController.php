@@ -19,15 +19,15 @@ final class ArticleController
     {
         $response = new Response('<h1>faire une redirection vers la page d\'erreur, ce post n\'existe pas</h1><a href="index.php?action=posts">Liste des posts</a><br>', 404);
 
-        $post = $this->postRepository->findAll(['id' => $id]);
+        $article = $this->postRepository->findOneBy(['id' => $id]);
 
-        if ($post !== null) {
-            $comments = $commentRepository->findByPost(['idPost' => $id]);
+        if ($article !== null) {
+            $comments = $commentRepository->findByPost(['id_article' => $id]);
             $response = new Response($this->view->render(
                 [
                     'template' => 'post',
                     'data' => [
-                        'post' => $post,
+                        'post' => $article,
                         'comments' => $comments,
                     ],
                 ],
@@ -39,11 +39,14 @@ final class ArticleController
 
     public function displayAllAction(): Response
     {
+
         $posts = $this->postRepository->findAll();
+
 
         return new Response($this->view->render([
             'template' => 'posts',
             'data' => ['posts' => $posts],
+
         ]));
     }
 }

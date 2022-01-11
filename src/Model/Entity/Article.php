@@ -15,9 +15,10 @@ final class Article
         private int $idAuthor,
         private string $title,
         private string $shortContent,
+        private string $pseudo,
         private string $content,
-        private DateTime $dateCreated,
-        private DateTime $dateUp
+        private  $dateCreated,
+        private  $dateUp
 
     ) {
     }
@@ -42,6 +43,11 @@ final class Article
     public function getShortContent(): string
     {
         return $this->shortContent;
+    }
+
+    public function getPseudo(): string
+    {
+        return $this->pseudo;
     }
 
     public function getContent(): string
@@ -91,22 +97,30 @@ final class Article
         return $this;
     }
 
+
+    public function setPseudo(string $pseudo): self
+    {
+
+        $this->pseudo = $pseudo;
+        return $this;
+    }
+
     public function setContent(string $content): self
     {
 
-        $this->title = $content;
+        $this->content = $content;
         return $this;
     }
 
 
-    public function SetDateCreated(DateTime $dateCreated)
+    public function setDateCreated(DateTime $dateCreated)
     {
 
         $this->dateCreated = $dateCreated;
         return $this;
     }
 
-    public function SetDateUp(DateTime $dateUp)
+    public function setDateUp(DateTime $dateUp)
     {
         $this->dateUp = $dateUp;
         return $this;

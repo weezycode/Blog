@@ -2,38 +2,35 @@
 
 declare(strict_types=1);
 
-// class pour gérer la bddection à la base de donnée
 namespace App\Service;
 
-use mysqli;
+
 use PDOException;
 
 use PDO;
 
-
-// *** exemple fictif d'accès à la base de données
 final class Database
 {
     private PDO $bdd;
 
-    private string $table = 'comments';
 
-    public function __construct(
-        $servername = "localhost",
-        $username = "root",
-        $password = ""
-    ) {
-        // Create bddection
+    public function __construct(string $servername, string $username, string $password, string $dbName)
+    {
+
+
 
         try {
-            $this->bdd = new PDO("mysql:host=$servername;dbname=blog", $username, $password);
+
+            $this->bdd = new PDO("mysql:host=$servername;dbname=$dbName", $username, $password);
             // set the PDO error mode to exception
             $this->bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
             //echo "bddected successfully";
         } catch (PDOException $e) {
             //echo "bddection failed: " . $e->getMessage();
         }
     }
+
 
 
     public function getPDO(): PDO

@@ -15,9 +15,42 @@ final class CommentRepository
     //protected $table = "comments";
     private PDO $bdd;
 
+
+
     public function __construct(Database $database)
     {
+
         $this->bdd = $database->getPDO();
+    }
+
+    public function findByPost(): ?array
+    {
+
+
+        $req = $this->bdd->prepare('SELECT * FROM comment INNER JOIN user ON comment.id_user = user.id WHERE id_article = id_article ORDER BY date_comment DESC');
+        // $req->bindValue(':id_article', (int) $id);
+
+
+
+        $req->execute();
+        // $req->setFetchMode(PDO::FETCH_CLASS, Comment::class);
+
+        // if ($req === null) {
+        //     return null;
+        // }
+
+        // réfléchir à l'hydratation des entités;
+
+        $comment = $req->fetchAll();
+
+        $comments = [];
+        foreach ($comment as $come) {
+            $comments[] = new Comment((int) $come['id'], (int)$come['id_user'], (string)$come['pseudo'], (int) $come['id_article'], (string)$come['content'], $come['date_comment'], (string)$come['display_status']);
+        }
+
+        //var_dump($comments);
+        //die;
+        return $comments;
     }
 
     public function findId($id)
@@ -40,25 +73,7 @@ final class CommentRepository
         return $req->fetch();
     }
 
-    public function findByPost($id)
-    {
-        $req = $this->bdd->prepare('SELECT * from comment where id_article = :idArticle ORDER BY date_comment DESC');
-        $req->bindValue(':id_article', (int) $id);
-        $req->execute();
-        $req->setFetchMode(PDO::FETCH_CLASS, Comment::class);
 
-        if ($req === null) {
-            return null;
-        }
-
-        // réfléchir à l'hydratation des entités;
-        $comment = $this->req->fetchAll();
-        foreach ($comment as $comments) {
-            $commentRepository = new UserRepository($comments);
-            $comments->setPseudoUser($commentRepository->find($comments->getUserId()));
-        }
-        return $comments;
-    }
 
     // public function creates(object $comment): bool
     // {
@@ -80,7 +95,7 @@ final class CommentRepository
 
     public function delete(Comment $comment)
     {
-        $req = $this->bdd->prepare('DELETE FROM comment WHERE id = :id');
+        $req = $this->bdd->prepare('DELETE FROM comment  WHERE id = :id');
         $req->bindValue(':id', $comment->getId());
         $req->execute();
     }
