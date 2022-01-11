@@ -14,7 +14,7 @@ final class Comment
         private string $pseudoUser, // TODO l'entity User serait plus approprié
         private int $idPost,
         private string $content,
-        private DateTime $dateComment,
+        private  $dateComment,
         private string $displayStatus
 
 
@@ -61,7 +61,7 @@ final class Comment
 
     //----------------------------------Setters-----------------------------------------
 
-    // Set id user 
+
 
     /**
      * @param mixed $IdUser
@@ -71,7 +71,8 @@ final class Comment
 
     public function setIdUser(int $IdUser)
     {
-        return $this->IdUser = $IdUser;
+        $this->IdUser = $IdUser;
+        return $this;
     }
 
     // Set pseudo user 
@@ -91,7 +92,8 @@ final class Comment
 
     public function setIdPost(int $idPost)
     {
-        return $this->idPost = $idPost;
+        $this->idPost = $idPost;
+        return $this;
     }
 
     // Set content 
@@ -104,7 +106,7 @@ final class Comment
 
     // Set Date comment
 
-    public function SetDatecomment(DateTime $dateComment)
+    public function setDatecomment(DateTime $dateComment)
     {
         $this->dateComment = $dateComment;
         return $this;

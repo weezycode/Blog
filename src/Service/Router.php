@@ -13,6 +13,7 @@ use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
 use App\Controller\Frontoffice\UserController;
 use App\Controller\Frontoffice\ArticleController;
+use App\Controller\Frontoffice\HomeController;
 use PDO;
 
 // TODO cette classe router est un exemple très basic. Cette façon de faire n'est pas optimale
@@ -27,27 +28,44 @@ final class Router
     {
         // dépendance21
         // $this->bdd = $database->getPDO();
-        $this->database = new Database();
+        $this->database = new Database('localhost', 'root', '', 'blog');
         $this->session = new Session();
         $this->view = new View($this->session);
     }
 
+
+
     public function run(): Response
     {
+
+
+
+
+
         //On test si une action a été défini ? si oui alors on récupére l'action : sinon on mets une action par défaut (ici l'action posts)
         $action = $this->request->hasQuery('action') ? $this->request->getQuery('action') : 'article';
 
         //Déterminer sur quelle route nous sommes // Attention algorithme naïf
+        // *** @Route http://localhost:8000/ ***
 
-        // *** @Route http://localhost:8000/?action=posts ***
+
+        // *** @Route http://localhost:8000/?action=article ***
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $controller = new HomeController($this->view);
+
+            // return $controller->displayIndex();
+        }
         if ($action === 'article') {
-            //injection des dépendances et instanciation du controller
+
             $postRepo = new ArticleRepository($this->database);
+
             $controller = new ArticleController($postRepo, $this->view);
+
 
             return $controller->displayAllAction();
 
-            // *** @Route http://localhost:8000/?action=post&id=5 ***
+            // *** @Route http://localhost:8000/?action=comment&id=5 ***
+
         } elseif ($action === 'post' && $this->request->hasQuery('id')) {
             //injection des dépendances et instanciation du controller
             $postRepo = new ArticleRepository($this->database);

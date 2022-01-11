@@ -7,6 +7,7 @@ namespace App\Model\Repository;
 use PDO;
 use App\Service\Database;
 use App\Model\Entity\Article;
+use DateTime;
 
 final class ArticleRepository
 {
@@ -20,51 +21,38 @@ final class ArticleRepository
 
     public function findAll(): ?array
     {
-        $req = $this->bdd->query('SELECT * FROM article ORDER BY date_created DESC');
+        $articles = [];
+        $req = $this->bdd->prepare('SELECT * FROM article LEFT JOIN user ON article.id_author = user.id WHERE article.id = article.id ORDER BY date_up DESC');
         $req->execute();
-        $req->setFetchMode(PDO::FETCH_CLASS, Article::class);
+        // $req->setFetchMode(PDO::FETCH_CLASS, Article::class);
 
-        if ($req === null) {
-            return null;
-        }
 
-        // réfléchir à l'hydratation des entités;
         $posts = $req->fetchAll();
+        // var_dump($posts);
+        // die;
         foreach ($posts as $post) {
-            $userRepository = new UserRepository($post);
-            $post->setIdAuthor($userRepository->find($post->getUserId()));
 
-            $commentRepository = new CommentRepository($post);
-            $post->setContent($commentRepository->findByPost($post->getId()));
-            //$posts[] = new Article((int)$post['id'], $post['title'], $post['text']);
+            // $userRepository = new UserRepository($post);
+            // $post->setIdAuthor($userRepository->find($post->getUserId()));
+
+            // $commentRepository = new CommentRepository($post);
+            // $post->setContent($commentRepository->findByPost($post->getId()));
+            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'], $post['content'], $post['date_created'], $post['date_up']);
         }
-
-        return $this;
+        return $articles;
     }
 
 
-    public function findOneBy(int $id): Article
+    public function findOneBy(): ?Article
     {
-        $req = $this->bdd->prepare('SELECT * FROM article WHERE id=:id');
-        $req->bindValue(':id', (int) $id);
+        $req = $this->bdd->prepare('SELECT * FROM article LEFT JOIN user ON article.id_author = user.id WHERE article.id = article.id');
         $req->execute();
-        $req->setFetchMode(PDO::FETCH_CLASS, Article::class);
-
-        $post = $req->fetch();
-
-        $userRepository = new UserRepository($post);
-        $post->setIdAuthor($userRepository->find($post->getUserId()));
-
-        $commentRepository = new CommentRepository($post);
-        $post->setContent($commentRepository->findByPost($post->getId()));
-
-        return $post;
-
-
-        //$data = $this->database->execute($criteria);
         // réfléchir à l'hydratation des entités;
-        //return $data === null ? $data : new Article($data['id'], $data['title'], $data['content']);
+        $data = $req->fetch();
+        return $data === null ? $data :
+            new Article((int)$data['id'], (int)$data['id_author'], $data['title'], $data['short_content'], $data['pseudo'], $data['content'], $data['date_created'], $data['date_up']);
     }
+
 
     public function createPost(Article $post)
     {

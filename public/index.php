@@ -6,7 +6,6 @@ require_once '../vendor/autoload.php';
 
 use App\Service\Router;
 use App\Service\Http\Request;
-use App\Service\Database;
 
 // TODO => créer un fichier .env pour mettre la configuration dedans.
 
