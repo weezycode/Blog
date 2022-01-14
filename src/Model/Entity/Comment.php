@@ -69,11 +69,11 @@ final class Comment
      */
 
 
-    public function setIdUser(int $IdUser)
-    {
-        $this->IdUser = $IdUser;
-        return $this;
-    }
+    // public function setIdUser(int $IdUser)
+    // {
+    //     $this->IdUser = $IdUser;
+    //     return $this;
+    // }
 
     // Set pseudo user 
 
@@ -90,11 +90,11 @@ final class Comment
      * 
      */
 
-    public function setIdPost(int $idPost)
-    {
-        $this->idPost = $idPost;
-        return $this;
-    }
+    // public function setIdPost(int $idPost)
+    // {
+    //     $this->idPost = $idPost;
+    //     return $this;
+    // }
 
     // Set content 
 

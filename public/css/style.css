@@ -1,10 +1,30 @@
 .danger {
     color: red;
 }
-body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(../images/67.jpg);
-    height: 100vh;
-    background-size: cover;
-    background-position: center
+.log{
+    background-color: darkgray;
 }
-
+.login {
+    width: 340px;
+    margin: 200px auto;
+  	font-size: 15px;
+}
+.login form {
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+.login h2 {
+    margin: 0 0 15px;
+}
+.formeControl, .button {
+    min-height: 38px;
+    border-radius: 2px;
+    margin-top: 10px;
+}
+.button {    
+    margin-top: 10px;    
+    font-size: 15px;
+    font-weight: bold;
+}

@@ -11,7 +11,10 @@ use PDO;
 
 final class Database
 {
-    private PDO $bdd;
+    private PDO  $bdd;
+
+    private string $table = '';
+
 
 
     public function __construct(string $servername, string $username, string $password, string $dbName)
@@ -69,8 +72,11 @@ final class Database
             if (!array_key_exists($criteria, $this->bdd[$this->table])) {
                 return null;
             }
+
             return $this->bdd[$this->table][$criteria];
         }
+
+
 
         return $this->bdd[$this->table];
     }
