@@ -43,19 +43,18 @@ final class Router
 
 
         //On test si une action a été défini ? si oui alors on récupére l'action : sinon on mets une action par défaut (ici l'action posts)
-        $action = $this->request->hasQuery('action') ? $this->request->getQuery('action') : 'article';
+        $action = $this->request->hasQuery('action') ? $this->request->getQuery('action') : 'home';
 
         //Déterminer sur quelle route nous sommes // Attention algorithme naïf
         // *** @Route http://localhost:8000/ ***
 
 
         // *** @Route http://localhost:8000/?action=article ***
-        if (isset($_SERVER['HTTP_HOST'])) {
+        if ($action === 'home') {
             $controller = new HomeController($this->view);
 
-            // return $controller->displayIndex();
-        }
-        if ($action === 'article') {
+            return $controller->displayIndex();
+        } elseif ($action === 'article') {
 
             $postRepo = new ArticleRepository($this->database);
 
@@ -66,9 +65,10 @@ final class Router
 
             // *** @Route http://localhost:8000/?action=comment&id=5 ***
 
-        } elseif ($action === 'post' && $this->request->hasQuery('id')) {
-            //injection des dépendances et instanciation du controller
+        } elseif ($action === 'articledetails' && $this->request->hasQuery('id')) {
+
             $postRepo = new ArticleRepository($this->database);
+
             $controller = new ArticleController($postRepo, $this->view);
 
             $commentRepo = new CommentRepository($this->database);
@@ -88,6 +88,14 @@ final class Router
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->logoutAction();
+
+            // *** @Route http://localhost:8000/?action=sign ***
+
+        } elseif ($action === 'sign') {
+            $userRepo = new UserRepository($this->database);
+            $controller = new UserController($userRepo, $this->view, $this->session);
+
+            return $controller->signAction($this->request);
         }
 
         return new Response("Error 404 - cette page n'existe pas<br><a href='index.php?action=posts'>Aller Ici</a>", 404);

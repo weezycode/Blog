@@ -30,6 +30,18 @@ final class UserController
         return new Response($this->view->render(['template' => 'login', 'data' => []]));
     }
 
+    public function signAction(Request $request): Response
+    {
+        $loginFormValidator = new LoginFormValidator($request, $this->userRepository, $this->session);
+
+        if ($request->getMethod() === 'POST') {
+            if ($loginFormValidator->isValid()) {
+                return new Response('<h1>Utilisateur connecté</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Liste des posts</a><br>', 200);
+            }
+            $this->session->addFlashes('error', 'Mauvais identifiants');
+        }
+        return new Response($this->view->render(['template' => 'sign', 'data' => []]));
+    }
     public function logoutAction(): Response
     {
         $this->session->remove('user');

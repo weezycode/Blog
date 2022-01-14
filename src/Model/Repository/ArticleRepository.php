@@ -19,10 +19,23 @@ final class ArticleRepository
     }
 
 
+
+
+
+    public function findOneBy(array $criteria, array $orderBy = null): ?Article
+    {
+        $req = $this->bdd->prepare('select * from article inner join user on article.id_author = user.id  where article.id =:id ');
+        $data = $req->execute($criteria);
+        // réfléchir à l'hydratation des entités;
+        $data = $req->fetch();
+        return $data === null ? $data :
+            new Article((int)$data['id'], (int)$data['id_author'], $data['title'], $data['short_content'], $data['pseudo'], $data['content'], $data['date_created'], $data['date_up']);
+    }
+
     public function findAll(): ?array
     {
         $articles = [];
-        $req = $this->bdd->prepare('SELECT * FROM article LEFT JOIN user ON article.id_author = user.id WHERE article.id = article.id ORDER BY date_up DESC');
+        $req = $this->bdd->prepare('SELECT * FROM article  ORDER BY date_up DESC');
         $req->execute();
         // $req->setFetchMode(PDO::FETCH_CLASS, Article::class);
 
@@ -37,22 +50,11 @@ final class ArticleRepository
 
             // $commentRepository = new CommentRepository($post);
             // $post->setContent($commentRepository->findByPost($post->getId()));
-            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'], $post['content'], $post['date_created'], $post['date_up']);
+
+            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] = "pa", $post['content'], $post['date_created'], $post['date_up']);
         }
         return $articles;
     }
-
-
-    public function findOneBy(): ?Article
-    {
-        $req = $this->bdd->prepare('SELECT * FROM article LEFT JOIN user ON article.id_author = user.id WHERE article.id = article.id');
-        $req->execute();
-        // réfléchir à l'hydratation des entités;
-        $data = $req->fetch();
-        return $data === null ? $data :
-            new Article((int)$data['id'], (int)$data['id_author'], $data['title'], $data['short_content'], $data['pseudo'], $data['content'], $data['date_created'], $data['date_up']);
-    }
-
 
     public function createPost(Article $post)
     {

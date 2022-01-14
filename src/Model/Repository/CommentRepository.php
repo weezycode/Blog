@@ -27,12 +27,13 @@ final class CommentRepository
     {
 
 
-        $req = $this->bdd->prepare('SELECT * FROM comment INNER JOIN user ON comment.id_user = user.id WHERE id_article = id_article ORDER BY date_comment DESC');
+        $req = $this->bdd->prepare('SELECT * FROM article  LEFT JOIN comment  ON article.id = comment.id_article LEFT JOIN user ON comment.id_user = user.id WHERE id_article = "' . $_GET['id'] . '" ORDER BY date_comment DESC');
         // $req->bindValue(':id_article', (int) $id);
 
 
 
         $req->execute();
+        //$comment = $data;
         // $req->setFetchMode(PDO::FETCH_CLASS, Comment::class);
 
         // if ($req === null) {

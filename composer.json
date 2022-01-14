@@ -2,7 +2,8 @@
     "name": "moudou/blog-php",
     "description": "Blog php cours opensclassrooms",
     "require": {
-        "twig/twig": "^3.3"
+        "twig/twig": "^3.3",
+        "swiftmailer/swiftmailer": "6.0"
     },
     "license": "MIT",
     "autoload": {
