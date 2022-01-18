@@ -23,11 +23,12 @@ final class LoginFormValidator
     public function isValid(): bool
     {
         if ($this->infoUser === null) {
+
             return false;
+        } else {
+
+            $user =  $this->userRepository->findOneBy(['email' => $this->infoUser['email']]);
         }
-
-        $user = $this->userRepository->findOneBy(['email' => $this->infoUser['email']]);
-
         if (!$user instanceof (User::class) || $this->infoUser['password'] !== $user->getPassword()) {
             return false;
         }
