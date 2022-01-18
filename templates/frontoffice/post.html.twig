@@ -41,18 +41,23 @@
                             {% for comment in comments %}
             <div class="card p-3 mt-2">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="user d-flex flex-row align-items-center"><span><small class="font-weight-bold text-primary">@{{ comment.pseudoUser }}</small> <small class="font-weight-bold">{{ comment.content }} </small></span> </div> <small>Le {{ comment.dateComment| date("d/m/Y") }} à {{ post.DateUp| date("H:m") }}</small>
+                    <div class="user d-flex flex-row align-items-center"><span><small class="font-weight-bold text-primary">@{{ comment.pseudoUser }}</small> <small class="font-weight-bold">{{ comment.content }} </small></span> </div> <small>Le {{ comment.dateComment| date("d/m/Y") }} à {{ comment.dateComment| date("H:i") }}</small>
                 </div>
             </div>
         {% endfor %}
             {% else %}
+            <div class="bg-light p-2">
             <h4>Aucun commentaires</h4>
             {% endif %}
+            </div>
             {% if session.user %}
-         <div class="bg-light p-2">
-                    <div class="d-flex flex-row align-items-start">@{{ session.user.pseudo }}<textarea class="form-control ml-1 shadow-none textarea"></textarea></div>
-                    <div class="mt-2 text-right"><button class="btn btn-primary btn-sm shadow-none" type="button">Post comment</button><button class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="button">Cancel</button></div>
+         <div class="card p-3 mt-2">
+                    <h4> Publier un commentaire </h4>
+                    <form method ="POST">
+                    <div class="d-flex flex-row align-items-start">@{{ session.user.email }}<textarea name="commentaire"class="form-control ml-1 shadow-none textarea"></textarea></div>
+                    <div class="mt-2 text-right"><button class="btn btn-primary btn-sm shadow-none" type="submit">Poster votre commentaire</button>
                 </div>
+                </form>
                 {% else %}
                 <a class ="" href="index.php?action=login"><button class=" text-center btn btn-primary btn-sm shadow-none commentConnect " type="button">Connectez vous pour commenter</button></a>
             {% endif %}

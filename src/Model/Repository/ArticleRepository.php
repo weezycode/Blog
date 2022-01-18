@@ -27,9 +27,9 @@ final class ArticleRepository
         $req = $this->bdd->prepare('select * from article inner join user on article.id_author = user.id  where article.id =:id ');
         $data = $req->execute($criteria);
         // réfléchir à l'hydratation des entités;
-        $data = $req->fetch();
+        $data = $req->fetch(PDO::FETCH_ASSOC);
         return $data === null ? $data :
-            new Article((int)$data['id'], (int)$data['id_author'], $data['title'], $data['short_content'], $data['pseudo'], $data['content'], $data['date_created'], $data['date_up']);
+            new Article((int)$data['id'], (int)$data['id_author'], (string)$data['title'], (string)$data['short_content'], (string)$data['pseudo'], (string)$data['content'], $data['date_created'], $data['date_up']);
     }
 
     public function findAll(): ?array

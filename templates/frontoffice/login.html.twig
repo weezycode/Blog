@@ -1,13 +1,18 @@
 {% include "/frontoffice/head.html.twig" %} 
 
 <div class="login">
-    <form action="/examples/actions/confirmation.php" method="post">
+
+    {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
+                <h5 class="danger text-center"> {{ message }} </h5>
+            {% endfor %}
+            {% block content %}{% endblock %}
+    <form method="POST">
         <h2 class="text-center">Se connecter</h2>       
         <div class="form-group">
-            <input type="text" class="form-control formeControl" placeholder="Username" required="required">
+            <input type="email" class="form-control formeControl" name="email" placeholder="Email" required="required">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control formeControl" placeholder="Password" required="required">
+            <input type="password" class="form-control formeControl" name="password" placeholder="Password" required="required">
         </div>
         <div class="form-group text-center">
             <button type="submit" class="button btn-primary btn-block">Se connecter</button>

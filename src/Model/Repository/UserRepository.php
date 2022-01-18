@@ -39,7 +39,7 @@ final class UserRepository
 
     public function findUser(string $email): User
     {
-        $req = $this->bdd->prepare('SELECT * FROM  WHERE  email=:email ');
+        $req = $this->bdd->prepare('SELECT * FROM user WHERE  email=:email ');
 
         $req->bindValue(':email', $email);
         $req->execute();
@@ -55,6 +55,7 @@ final class UserRepository
         $req->bindValue(':email', $user->getEmail());
         $req->bindValue(':passwd', $user->getPassword());
         $req->bindValue(':status', $user->getStatus());
+        $req->execute();
     }
 
     public function delete(User $user)
@@ -66,10 +67,14 @@ final class UserRepository
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
     {
-        $this->database->prepare('select * from user where email=:email');
-        $data = $this->database->execute($criteria);
+        $req = $this->bdd->prepare("SELECT * FROM user WHERE email = :email");
+        $data = $req->execute($criteria);
+        $data = $req->fetch();
 
         // réfléchir à l'hydratation des entités;
-        return $data === null ? null : new User((int)$data['id'], $data['pseudo'], $data['email'], $data['password'], $data['date_created'], $data['status']);
+        // var_dump($data);
+        // die;
+
+        return $data == null ? null : new User((int)$data['id'], (string)$data['email'], (string)$data['pseudo'],  (string)$data['passwd'], (string)$data['status'], $data['date_created']);
     }
 }

@@ -136,7 +136,8 @@
         </header> #}
 
         {# <main>             #}
-            {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
+            {% for mess
+            age in flashes %} {# TODO Gérer les différents type de message flash #}
                 <h2 class="danger"> {{ message }} </h2>
             {% endfor %}
             {% block content %}{% endblock %}

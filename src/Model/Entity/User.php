@@ -12,9 +12,9 @@ final class User
         private int $id,
         private string $email,
         private string $pseudo,
-        private string $passwdord,
-        private string $status,
-        private DateTime $dateInsert
+        private string $password,
+        private  $status,
+        private  $dateInsert
     ) {
     }
 
@@ -64,7 +64,7 @@ final class User
 
     public function setEmail(string $email = NULL)
     {
-        $this->email = $email;
+        $this->email = htmlspecialchars($email);
         return $this;
     }
 
@@ -72,7 +72,7 @@ final class User
 
     public function setPassword(string $password): self
     {
-        $this->password = $password;
+        $this->password = htmlspecialchars($password);
         return $this;
     }
 
@@ -85,7 +85,7 @@ final class User
 
     public function setDateInsert(DateTime $dateInsert)
     {
-        $this->dateInsert = $dateInsert;
+        $this->dateInsert = $dateInsert('date("d/m/Y" )');
         return $this;
     }
 }
