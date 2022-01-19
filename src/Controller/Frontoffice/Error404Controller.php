@@ -8,7 +8,7 @@ namespace  App\Controller\Frontoffice;
 use App\View\View;
 use App\Service\Http\Response;
 
-final class Error404
+final class Error404Controller
 {
     /**
      * @Route("/message", name="message", methods="POST")
