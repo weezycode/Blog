@@ -16,6 +16,7 @@ use App\Model\Repository\CommentRepository;
 use App\Controller\Frontoffice\HomeController;
 use App\Controller\Frontoffice\UserController;
 use App\Controller\Frontoffice\ArticleController;
+use App\Controller\Frontoffice\Error404Controller;
 
 // TODO cette classe router est un exemple très basic. Cette façon de faire n'est pas optimale
 // TODO Le router ne devrait pas avoir la responsabilité de l'injection des dépendances
@@ -53,9 +54,13 @@ final class Router
 
         // *** @Route http://localhost:8000/***
         if ($action === 'home') {
-            $controller = new HomeController($this->view);
+            $controller = new HomeController($this->view, $this->request);
 
             return $controller->displayIndex();
+        } elseif ($action === 'contact') {
+            $controller = new HomeController($this->view, $this->request);
+
+            return $controller->contactForm();
         } elseif ($action === 'article') {
 
             $postRepo = new ArticleRepository($this->database);
@@ -99,7 +104,7 @@ final class Router
 
             return $controller->signAction($this->request);
         } else {
-            $controller = new Error404($this->view);
+            $controller = new Error404Controller($this->view);
             return $controller->displayError();
             // return new Response("Error 404 - cette page n'existe pas<br><a href='index.php?action=posts'>Aller Ici</a>", 404);
         }

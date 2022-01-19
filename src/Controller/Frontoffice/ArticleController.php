@@ -22,7 +22,7 @@ final class ArticleController
         $article = $this->postRepository->findOneBy(['id' => $id]);
 
         if ($article !== null) {
-            $comments = $commentRepository->findByPost(['id_article' => $id]);
+            $comments = $commentRepository->findByPost($id);
             $response = new Response($this->view->render(
                 [
                     'template' => 'post',

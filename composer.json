@@ -3,12 +3,8 @@
     "description": "Blog php cours opensclassrooms",
     "require": {
         "twig/twig": "^3.3",
-        "symfony/mailer": "^6.0",
-        "symfony/twig-bridge": "^6.0",
-        "symfony/google-mailer": "^6.0",
-        "vlucas/phpdotenv": "^5.4",
-        "phpmailer/phpmailer": "^6.5",
-        "swiftmailer/swiftmailer": "^6.3"
+        "swiftmailer/swiftmailer": "^6.3",
+        "filp/whoops": "^2.14"
     },
     "license": "MIT",
     "autoload": {

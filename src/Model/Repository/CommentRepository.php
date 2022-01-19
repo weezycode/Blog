@@ -23,24 +23,13 @@ final class CommentRepository
         $this->bdd = $database->getPDO();
     }
 
-    public function findByPost(): ?array
+    public function findByPost(int $idPost): ?array
     {
 
 
-        $req = $this->bdd->prepare('SELECT * FROM article  LEFT JOIN comment  ON article.id = comment.id_article LEFT JOIN user ON comment.id_user = user.id WHERE id_article = "' . $_GET['id'] . '" ORDER BY date_comment DESC');
-        // $req->bindValue(':id_article', (int) $id);
-
-
-
+        $req = $this->bdd->prepare("SELECT * FROM comment INNER JOIN user ON comment.id_user = user.id WHERE id_article = :id_article AND display_status = 'granted' ORDER BY date_comment DESC");
+        $req->bindValue(':id_article', $idPost);
         $req->execute();
-        //$comment = $data;
-        // $req->setFetchMode(PDO::FETCH_CLASS, Comment::class);
-
-        // if ($req === null) {
-        //     return null;
-        // }
-
-        // réfléchir à l'hydratation des entités;
 
         $comment = $req->fetchAll();
 
@@ -54,16 +43,7 @@ final class CommentRepository
         return $comments;
     }
 
-    public function findId($id)
-    {
-        $req = $this->bdd->prepare('SELECT * FROM comment WHERE id = :id');
 
-        $req->bindValue(':id', (int)$id);
-        $req->execute();
-        $req->setFetchMode(PDO::FETCH_CLASS, Comment::class);
-
-        return $req->fetch();
-    }
 
     public function findAll(): array
     {

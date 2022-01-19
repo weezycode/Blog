@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace  App\Service\FormValidator;
 
-final class ContactFormValidator
+final class ValidForm
 {
     /**
      * Check if is not empty and purify
@@ -17,7 +17,7 @@ final class ContactFormValidator
     {
         if ((isset($data) && ($data != '')) && strlen($data) < 255) {
             $data = trim($data);
-            $data = stripslashes($data);
+            //$data = stripslashes($data);
             $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
             return $data;
         }
