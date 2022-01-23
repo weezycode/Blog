@@ -1,6 +1,11 @@
-{% include "/frontoffice/head.html.twig" %} 
+ {% extends "/backoffice/base.html.twig" %} 
+ {% block title %}Inscription{% endblock %}
+ {% block content %} 
 <div class="login">
-    <form  method="post">
+    {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
+        <h5 class="danger text-center"> {{ message }} </h5>
+    {% endfor %}
+    <form action = "index.php?action=signup" method="POST">
         <h2 class="text-center">S'inscrire</h2>       
         <div class="form-group">
             <input type="text" name="pseudo" class="form-control formeControl" placeholder="Pseudo" required="required">
@@ -21,4 +26,4 @@
     </form>
     
 </div>
-{% include "/frontoffice/footer.html.twig" %} 
+{% endblock %}

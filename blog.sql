@@ -101,15 +101,15 @@ INSERT INTO `user` (`id`, `pseudo`, `email`, `passwd`, `status`, `date_created`)
 --
 ALTER TABLE `article`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `users_articles_fk` (`id_author`);
+  ADD KEY `user_article_fk` (`id_author`);
 
 --
 -- Index pour la table `comment`
 --
 ALTER TABLE `comment`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `users_comments_fk` (`id_user`),
-  ADD KEY `articles_comments_fk` (`id_article`);
+  ADD KEY `user_comment_fk` (`id_user`),
+  ADD KEY `article_comment_fk` (`id_article`);
 
 --
 -- Index pour la table `user`
@@ -149,14 +149,14 @@ ALTER TABLE `user`
 -- Contraintes pour la table `article`
 --
 ALTER TABLE `article`
-  ADD CONSTRAINT `users_articles_fk` FOREIGN KEY (`id_author`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `user_article_fk` FOREIGN KEY (`id_author`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `comment`
 --
 ALTER TABLE `comment`
-  ADD CONSTRAINT `articles_comments_fk` FOREIGN KEY (`id_article`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `users_comments_fk` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `article_comment_fk` FOREIGN KEY (`id_article`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_comment_fk` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

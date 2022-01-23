@@ -80,6 +80,27 @@ final class Database
 
         return $this->bdd[$this->table];
     }
+    /**
+     * @param $sql
+     * @param null $parameters
+     * @param null $binds
+     * @return bool|false|\PDOStatement
+     */
+    protected function sql($sql, $parameters = null)
+    {
+
+        if ($parameters) {
+            $result = $this->getPDO()->prepare($sql);
+
+            $result->execute($parameters);
+
+            return $result;
+        } else {
+            $result = $this->getPDO()->query($sql);
+
+            return $result;
+        }
+    }
 
 
     /* A retirer - Fin */

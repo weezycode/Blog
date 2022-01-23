@@ -74,6 +74,7 @@ final class Article
      * 
      */
 
+
     public function setIdAuthor(int $idAuthor)
     {
 

@@ -16,47 +16,60 @@ final class UserRepository
     {
         $this->bdd = $database->getPDO();
     }
-    public function findAll(): array
+    public function findAll()
     {
         $req = $this->bdd->query('SELECT * FROM user');
 
-        $req->execute();
-        $req->setFetchMode(PDO::FETCH_CLASS, User::class);
 
-        return $req->fetchAll();
+        $req->setFetchMode(PDO::FETCH_CLASS, User::class);
+        $req->execute();
     }
 
     public function find(int $id)
     {
         $req = $this->bdd->prepare('SELECT * FROM user WHERE id = :id');
 
-        $req->bindValue(':id', (int)$id);
+        $req->bindValue(':id', $id);
         $req->execute();
         $req->setFetchMode(PDO::FETCH_CLASS, User::class);
 
         return $req->fetchAll();
     }
 
-    public function findUser(string $email): User
+    public function findUser()
     {
-        $req = $this->bdd->prepare('SELECT * FROM user WHERE  email=:email ');
-
-        $req->bindValue(':email', $email);
+        $req = $this->bdd->prepare('SELECT * FROM user ');
         $req->execute();
-        $req->setFetchMode(PDO::FETCH_CLASS, User::class);
-
-        return $req->fetch();
+        $users = $req->fetchAll(PDO::FETCH_ASSOC);
+        $arrayUsers = [];
+        foreach ($users as $data) {
+            $arrayUsers[] = new User((int)$data['id'], (string)$data['email'], (string)$data['pseudo'],  (string)$data['passwd'], (string)$data['status'], $data['date_created']);
+        }
+        return $arrayUsers;
     }
 
-    public function create(User $user)
+    public function createUser($pseudo, $email, $passwd)
     {
-        $req = $this->bdd->prepare('INSERT INTO users (pseudo, email, passwd, status, date_created) VALUES(:pseudo, :email, :passwd, :status, :NOW()');
-        $req->bindValue(':pseudo', $user->getPseudo());
-        $req->bindValue(':email', $user->getEmail());
-        $req->bindValue(':passwd', $user->getPassword());
-        $req->bindValue(':status', $user->getStatus());
-        $req->execute();
+        $data = [
+            'pseudo' => $pseudo,
+            'email' => $email,
+            'passwd' => $passwd,
+            'status' => 'member',
+
+        ];
+
+        $req = $this->bdd->prepare("INSERT INTO user (pseudo, email, passwd, status,date_created)VALUES(:pseudo, :email, :passwd, :status, NOW())");
+
+        $req->execute($data);
     }
+    /**
+     * Return if User already exist
+     *
+     * @param  $username
+     * @param  $email
+     * @return bool|false|\PDOStatement
+     */
+
 
     public function delete(User $user)
     {

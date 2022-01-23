@@ -27,13 +27,6 @@ final class UserController
         return new Response($this->view->render(['template' => 'sign', 'data' => []]));
     }
 
-    public function Admin(): Response
-    {
-
-        return new Response($this->view->renderAdmin(['template' => 'listComment', 'data' => []]));
-    }
-
-
     public function loginAction(Request $request): Response
     {
 

@@ -26,15 +26,11 @@ final class SendEmail
     {
 
         $transport = (new Swift_SmtpTransport('localhost', 1025));
-
-
         $mailer = new Swift_Mailer($transport);
-
-        $message = (new Swift_Message('Message du Blog de ' . $name . ' ' . $lname))
+        $message = (new Swift_Message('Message du Blog de la part de  ' . $name . ' ' . $lname))
             ->setFrom($email)
             ->setTo($email)
             ->setBody($message);
-
         $mailer->send($message);
     }
 }

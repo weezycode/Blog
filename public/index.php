@@ -8,6 +8,14 @@ use App\Service\Router;
 use App\Service\Http\Request;
 
 // TODO => créer un fichier .env pour mettre la configuration dedans.
+// const APP_ENV = 'dev';
+
+// if (APP_ENV === 'dev') {
+//     $whoops = new \Whoops\Run();
+//     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
+//     $whoops->register();
+// }
+
 
 //$data = new Database();
 //$data->getPDO();

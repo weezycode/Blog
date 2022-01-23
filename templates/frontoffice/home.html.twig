@@ -1,10 +1,18 @@
 {% include "/frontoffice/header.html.twig" %} 
 
+             {# TODO Gérer les différents type de message flash #}
+                {# <h2 class="danger text-center">  </h2> #}
+           
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <!-- Post preview-->
                 <div class="post-preview">
+                    {% for message in flashes %}
+                        <div class="alert alert-dark alert-dismissible">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong>{{ message }} </strong> 
+                    </div> {% endfor %}
                         <h2 class="post text-center ">A propos de moi !</h2>
                     <p class="post-meta">Etudiant en développement web PHP/SYMFONY chez OpensClassrooms. </p>
                 </div>
@@ -48,9 +56,7 @@
                 </div>
             </div>
         </div>  
-            {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
-                <h2 class="danger"> {{ message }} </h2>
-            {% endfor %}
+
             {% block content %}{% endblock %}
     </main>
     

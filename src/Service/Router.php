@@ -6,6 +6,7 @@ namespace  App\Service;
 
 use PDO;
 use App\View\View;
+use App\Model\Entity\User;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
@@ -16,7 +17,9 @@ use App\Model\Repository\CommentRepository;
 use App\Controller\Frontoffice\HomeController;
 use App\Controller\Frontoffice\UserController;
 use App\Controller\Frontoffice\ArticleController;
+use App\Controller\Frontoffice\ContactController;
 use App\Controller\Frontoffice\Error404Controller;
+use App\Controller\Frontoffice\CommentController;
 
 // TODO cette classe router est un exemple très basic. Cette façon de faire n'est pas optimale
 // TODO Le router ne devrait pas avoir la responsabilité de l'injection des dépendances
@@ -25,6 +28,9 @@ final class Router
     private PDO $bdd;
     private View $view;
     private Session $session;
+    private $send;
+    private $message;
+    private  $user;
 
 
     public function __construct(private Request $request)
@@ -54,18 +60,20 @@ final class Router
 
         // *** @Route http://localhost:8000/***
         if ($action === 'home') {
-            $controller = new HomeController($this->view, $this->request);
+            $controller = new HomeController($this->view);
 
             return $controller->displayIndex();
         } elseif ($action === 'contact') {
-            $controller = new HomeController($this->view, $this->request);
+
+            $controller = new ContactController($this->request, $this->view, $this->session);
 
             return $controller->contactForm();
         } elseif ($action === 'article') {
 
+            $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
 
-            $controller = new ArticleController($postRepo, $this->view);
+            $controller = new ArticleController($postRepo, $this->view, $userRepo);
 
 
             return $controller->displayAllAction();
@@ -75,24 +83,32 @@ final class Router
         } elseif ($action === 'articledetails' && $this->request->hasQuery('id')) {
 
             $postRepo = new ArticleRepository($this->database);
-
-            $controller = new ArticleController($postRepo, $this->view);
+            $userRepo = new UserRepository($this->database);
+            $controller = new ArticleController($postRepo, $this->view, $userRepo);
 
             $commentRepo = new CommentRepository($this->database);
-
             return $controller->displayOneAction((int) $this->request->getQuery('id'), $commentRepo);
 
             // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {
             $userRepo = new UserRepository($this->database);
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $controller = new UserController($this->request, $userRepo, $this->view, $this->session);
 
             return $controller->loginAction($this->request);
 
             // *** @Route http://localhost:8000/?action=logout ***
+        } elseif ($action === 'addComment') {
+            $userRepo = new UserRepository($this->database);
+            $commentRepo = new CommentRepository($this->database);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new CommentController($this->request, $userRepo, $this->session, $commentRepo, $this->view, $postRepo);
+            return $controller->addComment();
+
+
+            // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository($this->database);
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $controller = new UserController($this->request, $userRepo, $this->view, $this->session);
 
             return $controller->logoutAction();
 
@@ -100,9 +116,19 @@ final class Router
 
         } elseif ($action === 'sign') {
             $userRepo = new UserRepository($this->database);
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $controller = new UserController($this->request, $userRepo, $this->view, $this->session);
 
-            return $controller->signAction($this->request);
+            return $controller->signAction();
+        } elseif ($action === 'signup') {
+            $userRepo = new UserRepository($this->database);
+            $controller = new UserController($this->request, $userRepo, $this->view, $this->session);
+
+            return $controller->signUpAction();
+        } elseif ($action === 'admin') {
+            $userRepo = new UserRepository($this->database);
+            $controller = new UserController($this->request, $userRepo, $this->view, $this->session);
+
+            return $controller->Admin();
         } else {
             $controller = new Error404Controller($this->view);
             return $controller->displayError();
