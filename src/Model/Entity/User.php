@@ -19,6 +19,10 @@ final class User
     }
 
     //-----------------------------------------Getters-----------------------------------------
+    public static function getClassUser()
+    {
+        return  User::class;
+    }
 
     public function getId(): int
     {

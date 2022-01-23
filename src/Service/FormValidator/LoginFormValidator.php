@@ -29,9 +29,12 @@ final class LoginFormValidator
 
             $user =  $this->userRepository->findOneBy(['email' => $this->infoUser['email']]);
         }
-        if (!$user instanceof (User::class) || $this->infoUser['password'] !== $user->getPassword()) {
+        $isPasswordCorrect = password_verify($this->infoUser['password'], $user->getPassword());
+
+        if (!$user instanceof (User::class) || $isPasswordCorrect === false) {
             return false;
         }
+
 
         $this->session->set('user', $user);
 

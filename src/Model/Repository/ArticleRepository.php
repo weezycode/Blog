@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Model\Repository;
 
 use PDO;
+use DateTime;
 use App\Service\Database;
 use App\Model\Entity\Article;
-use DateTime;
+use App\Model\Entity\User;
+use App\Model\Repository\UserRepository;
 
 final class ArticleRepository
 {
@@ -24,34 +26,38 @@ final class ArticleRepository
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Article
     {
-        $req = $this->bdd->prepare('select * from article inner join user on article.id_author = user.id  where article.id =:id ');
-        $data = $req->execute($criteria);
+        $req = $this->bdd->prepare('SELECT * FROM article  where id = :id');
+        $req->execute($criteria);
         // réfléchir à l'hydratation des entités;
         $data = $req->fetch(PDO::FETCH_ASSOC);
+        $req = $this->bdd->prepare("SELECT pseudo FROM user Where id = '" . $data['id_author'] . "' ");
+        $req->setFetchMode(PDO::FETCH_CLASS, User::class);
+        $req->execute();
+        $pseudo = $req->fetch(PDO::FETCH_ASSOC);
+        foreach ($pseudo as $value) {
+        }
+        if ($data['id'] === null) {
+            header('Location: index.php?action=perdu');
+        }
         return $data === null ? $data :
-            new Article((int)$data['id'], (int)$data['id_author'], (string)$data['title'], (string)$data['short_content'], (string)$data['pseudo'], (string)$data['content'], $data['date_created'], $data['date_up']);
+            new Article((int)$data['id'], (int)$data['id_author'], (string)$data['title'], (string)$data['short_content'], (string)$data['pseudo'] = $value, (string)$data['content'], $data['date_created'], $data['date_up']);
     }
 
     public function findAll(): ?array
     {
-        $articles = [];
+
         $req = $this->bdd->prepare('SELECT * FROM article  ORDER BY date_up DESC');
         $req->execute();
-        // $req->setFetchMode(PDO::FETCH_CLASS, Article::class);
-
-
+        if ($req === null) {
+            return null;
+        }
         $posts = $req->fetchAll();
-        // var_dump($posts);
-        // die;
+
+        $articles = [];
+
         foreach ($posts as $post) {
 
-            // $userRepository = new UserRepository($post);
-            // $post->setIdAuthor($userRepository->find($post->getUserId()));
-
-            // $commentRepository = new CommentRepository($post);
-            // $post->setContent($commentRepository->findByPost($post->getId()));
-
-            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] = "pa", $post['content'], $post['date_created'], $post['date_up']);
+            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] =  "", $post['content'], $post['date_created'], $post['date_up']);
         }
         return $articles;
     }

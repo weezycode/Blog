@@ -17,29 +17,42 @@ final class ValidForm
     {
         if ((isset($data) && ($data != '')) && strlen($data) < 255) {
             $data = trim($data);
-            //$data = stripslashes($data);
+            $data = stripslashes($data);
             $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+
+            return $data;
+        }
+    }
+    public static function purifyAll($data)
+    {
+        if ((isset($data) && ($data !== " ")) && strlen(trim($data)) > 0 && !empty($data)) {
+            //$data = trim($data);
+            $data = is_array($data) ?
+                array_map("stripslashes_deep", $data) :
+                stripslashes($data);
+            $data = htmlspecialchars($data);
+            $data = html_entity_decode($data, ENT_QUOTES, "UTF-8");
             return $data;
         }
     }
     /** * Check if is not empty * * @param $data * * @return bool */
     public static function purifyContent($data)
     {
-        if (isset($data) && ($data != '')) {
+        if (isset($data) && ($data != "")) {
             return $data;
         }
     }
     /** * Check if is alpha * * @param $value * * @return bool */
     public static function is_alpha($value)
     {
-        if (preg_match('/^[a-zA-Z]+$/', $value) && !empty($value)) {
+        if (preg_match("/^[a-zA-Z]+$/", $value) && !empty($value)) {
             return true;
         }
     }
     /** * Check if alphanumeric * * @param $value * * @return bool */
     public static function is_alphanum($value)
     {
-        if (preg_match('/^[a-zA-Z0-9_]+$/', $value) && !empty($value)) {
+        if (preg_match("/^[a-zA-Z0-9_]+$/", $value) && !empty($value)) {
             return true;
         }
     }

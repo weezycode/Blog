@@ -25,25 +25,16 @@ final class CommentRepository
 
     public function findByPost(int $idPost): ?array
     {
-
-
         $req = $this->bdd->prepare("SELECT * FROM comment INNER JOIN user ON comment.id_user = user.id WHERE id_article = :id_article AND display_status = 'granted' ORDER BY date_comment DESC");
         $req->bindValue(':id_article', $idPost);
         $req->execute();
-
         $comment = $req->fetchAll();
-
         $comments = [];
         foreach ($comment as $come) {
             $comments[] = new Comment((int) $come['id'], (int)$come['id_user'], (string)$come['pseudo'], (int) $come['id_article'], (string)$come['content'], $come['date_comment'], (string)$come['display_status']);
         }
-
-        //var_dump($comments);
-        //die;
         return $comments;
     }
-
-
 
     public function findAll(): array
     {
@@ -54,24 +45,20 @@ final class CommentRepository
         return $req->fetch();
     }
 
-
-
-    // public function creates(object $comment): bool
-    // {
-    //     // TODO à faire
-    //     return false;
-    // }
-
-    public function create(Comment $comment)
+    public function addComment($idUser, $idPost, $content)
     {
-        $req = $this->bdd->prepare('INSERT INTO comment (id_user, content, id_article, display_status, date_comment) VALUES(:idUser, :content, :idArticle, :displayStatus, NOW())');
+        $data = [
+            'id_user' => $idUser,
+            'id_article' => $idPost,
+            'content' => $content,
+            'display_status' => 'pending',
 
-        $req->bindValue(':idUser', $comment->getIdUser());
-        $req->bindValue(':content', $comment->getContent());
-        $req->bindValue(':idArticle', $comment->getIdPost());
-        $req->bindValue(':displayStatus', $comment->getDisplayStatus());
+        ];
 
-        $req->execute();
+        $req = $this->bdd->prepare('INSERT INTO comment (id_user, id_article, content, date_comment, display_status) VALUES
+        (:id_user, :id_article, :content, NOW(),:display_status)');
+
+        $req->execute($data);
     }
 
     public function delete(Comment $comment)

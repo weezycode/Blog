@@ -1,11 +1,10 @@
-{% include "/frontoffice/head.html.twig" %} 
-
+ {% extends "/backoffice/base.html.twig" %} 
+ {% block title %}Incsription{% endblock %}
+ {% block content %}
 <div class="login">
-
-    {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
-                <h5 class="danger text-center"> {{ message }} </h5>
-            {% endfor %}
-            {% block content %}{% endblock %}
+   {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
+        <h5 class="danger text-center"> {{ message }} </h5>
+    {% endfor %}
     <form method="POST">
         <h2 class="text-center">Se connecter</h2>       
         <div class="form-group">
@@ -21,13 +20,6 @@
             <p class="text-center">Pas encore de compte ?
             <a href="index.php?action=sign">Créer un compte</a></p>
         </div>        
-    </form>
-    
+    </form>   
 </div>
-        {# <label for="email">Email:</label>
-        <input type="email" id="email" name="email" >
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="passwd" >
-        <input type="submit" value="Submit">         #}
-
-{% include "/frontoffice/footer.html.twig" %} 
+{% endblock %}
