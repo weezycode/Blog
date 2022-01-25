@@ -14,6 +14,7 @@ use App\Model\Repository\UserRepository;
 final class ArticleRepository
 {
     private PDO $bdd;
+    private $author;
 
     public function __construct(Database $database)
     {
@@ -55,9 +56,13 @@ final class ArticleRepository
 
         $articles = [];
 
+
         foreach ($posts as $post) {
 
-            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] =  "", $post['content'], $post['date_created'], $post['date_up']);
+            $author = $this->findOneBy(['id' => $post['id_author']]);
+
+
+            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] = $author->getPseudo(), $post['content'], $post['date_created'], $post['date_up']);
         }
         return $articles;
     }

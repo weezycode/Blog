@@ -4,5 +4,25 @@
                 <h2 class="danger text-center"> {{ message }} </h2>
             {% endfor %}
         </main>
+        <body>
+    <header class ="header-admin">
+        <h1 class="text-center"> Bienvenue dans l'administration du blog </h1>
+    </header>
+<div class="container mt-3">
+            <ul class="nav nav-pills nav-justified">
+                <li class="nav-item">
+                    <a class="nav-link " href="index.php?action=userlist">Lite des membres</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?action=admin">Liste des articles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?action=listComment">Liste des commentaires</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="index.php?action=superAdminPage">Liste de tous les utilisateurs</a>
+                </li>
+            </ul>
+</div>
 {% block content %}{% endblock %}
 {% include "/frontoffice/footer.html.twig" %} 

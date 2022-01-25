@@ -27,11 +27,7 @@ final class UserController
         return new Response($this->view->render(['template' => 'sign', 'data' => []]));
     }
 
-    public function Admin(): Response
-    {
 
-        return new Response($this->view->renderAdmin(['template' => 'listComment', 'data' => []]));
-    }
 
 
     public function loginAction(Request $request): Response
@@ -45,10 +41,7 @@ final class UserController
             }
             $this->session->addFlashes('error', 'Mauvais identifiants');
         }
-        // $test = $this->session->get('user');
 
-        // var_dump($test->getStatus());
-        // die;
 
 
         return new Response($this->view->render(['template' => 'login', 'data' => []]));

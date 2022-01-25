@@ -32,3 +32,9 @@
     margin-top: 20px;
     text-align: center;
 }
+.header-admin{
+    margin-top: 150px;
+}
+.header-admin h1{
+    margin-bottom: 50px;
+}

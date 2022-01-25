@@ -8,6 +8,7 @@ use App\View\View;
 use App\Service\Http\Response;
 use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
+use App\Controller\Frontoffice\Error404Controller;
 
 final class ArticleController
 {
@@ -17,7 +18,7 @@ final class ArticleController
 
     public function displayOneAction(int $id, CommentRepository $commentRepository): Response
     {
-        $response = new Response('<h1>faire une redirection vers la page d\'erreur, ce post n\'existe pas</h1><a href="index.php?action=posts">Liste des posts</a><br>', 404);
+        $response = new Error404Controller($this->view);
 
         $article = $this->postRepository->findOneBy(['id' => $id]);
 

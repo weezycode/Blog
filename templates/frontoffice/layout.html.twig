@@ -1,0 +1,8 @@
+{% include "/frontoffice/head.html.twig" %} 
+        <main>            
+            {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
+                <h2 class="danger text-center"> {{ message }} </h2>
+            {% endfor %}
+        </main>
+{% block content %}{% endblock %}
+{% include "/frontoffice/footer.html.twig" %} 

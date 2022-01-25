@@ -44,7 +44,7 @@ final class CommentValidator
         $comment = $this->commentRepository->findByPost($idPost);
         $comments = [];
         foreach ($comment as $comments) {
-            if (!$comment instanceof (Comment::class) || $idPost !== $comments['id_article']) {
+            if ($idPost !== $comments['id_article']) {
                 return false;
             }
         }

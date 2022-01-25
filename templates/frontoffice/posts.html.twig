@@ -21,23 +21,20 @@
                         <!-- Blog post-->
                         <div class="card mb-4">
                             <a href="#!"><img class="card-img-top"
-                                    src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                                    src="images/MOUDOU.png" alt="..." /></a>
                             <div class="cardbody">
                                 <div class="small text-muted">{{post.DateCreated | date("d/m/Y" )}}</div>
                                  <em>dernière mise à jour le {{post.dateUp | date("d/m/Y")}}</em>
                                 <h3 class="card-title h4" >{{ post.title}}</h3>
                                 <p class="card-text">{{ post.shortContent}}</p>
                                 <a class="btn btn-primary" href="index.php?action=articledetails&id={{ post.id}}">Lire le post →</a>
-                                
-                                 
-                        </div>                           
-                    </div>                       
-                </div>                   
-                 {% endfor %}               
+                            </div>                             
+                        </div>                       
+                    </div>                   
+                {% endfor %}               
             </div>
         </div>
     </div>
-   
 {% endblock %}
 
 

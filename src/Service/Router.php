@@ -17,9 +17,10 @@ use App\Model\Repository\CommentRepository;
 use App\Controller\Frontoffice\HomeController;
 use App\Controller\Frontoffice\UserController;
 use App\Controller\Frontoffice\ArticleController;
+use App\Controller\Frontoffice\CommentController;
 use App\Controller\Frontoffice\ContactController;
 use App\Controller\Frontoffice\Error404Controller;
-use App\Controller\Frontoffice\CommentController;
+use App\Controller\backoffice\AdminArticleController;
 
 // TODO cette classe router est un exemple très basic. Cette façon de faire n'est pas optimale
 // TODO Le router ne devrait pas avoir la responsabilité de l'injection des dépendances
@@ -126,9 +127,17 @@ final class Router
             return $controller->signUpAction();
         } elseif ($action === 'admin') {
             $userRepo = new UserRepository($this->database);
-            $controller = new UserController($this->request, $userRepo, $this->view, $this->session);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session);
 
             return $controller->Admin();
+        } elseif ($action === 'displayForUpdatePost' && $this->request->hasQuery('id')) {
+
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session);
+            return $controller->displayForUpdatePost((int) $this->request->getQuery('id'));
+
+            // *** @Route http://localhost:8000/?action=login ***
         } else {
             $controller = new Error404Controller($this->view);
             return $controller->displayError();
