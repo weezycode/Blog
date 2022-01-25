@@ -15,7 +15,7 @@ final class ValidForm
      */
     public static function purify($data)
     {
-        if ((isset($data) && ($data != '')) && strlen($data) < 255) {
+        if ((isset($data) && ($data != '  ')) && strlen($data) > 5) {
             $data = trim($data);
             $data = stripslashes($data);
             $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
@@ -25,7 +25,7 @@ final class ValidForm
     }
     public static function purifyAll($data)
     {
-        if ((isset($data) && ($data !== " ")) && strlen(trim($data)) > 0 && !empty($data)) {
+        if ((isset($data) && ($data !== "")) && strlen(trim($data)) > 0 && !empty($data)) {
             //$data = trim($data);
             $data = is_array($data) ?
                 array_map("stripslashes_deep", $data) :

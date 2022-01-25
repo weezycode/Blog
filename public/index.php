@@ -16,9 +16,6 @@ use App\Service\Http\Request;
 //     $whoops->register();
 // }
 
-
-//$data = new Database();
-//$data->getPDO();
 $request = new Request($_GET, $_POST, $_SERVER);
 $router = new Router($request);
 $response = $router->run();

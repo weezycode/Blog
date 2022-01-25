@@ -12,7 +12,7 @@
                         <form action="index.php?action=updatePost" method ="POST" class = "was-valided">
                             <div class="form-floating">
                                 <input type="hidden" value="{{ post.id}}"  name="id_article"/>
-                                <input type="hidden" value="{{session.user.id}}"  name="id_user"/>
+                                <input type="hidden" value="{{session.user.id}}"  name="id_author"/>
                                 <input class="form-control" name="title"  type="text" value ="{{ post.title}}"required />
                                 <label for="name">Titre</label>
                             </div>

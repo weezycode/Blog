@@ -24,7 +24,7 @@ final class Database
 
         try {
 
-            $this->bdd = new PDO("mysql:host=$servername;dbname=$dbName", $username, $password);
+            $this->bdd = new PDO("mysql:host=$servername;dbname=$dbName;charset=utf8", $username, $password);
             // set the PDO error mode to exception
             $this->bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -40,23 +40,7 @@ final class Database
     {
 
         return $this->bdd;
-
-        // $this->sq = "SELECT id_author, title, short_content,content, date_created FROM articles";
-
-        // $this->result = $this->bdd->prepare($this->sq);
-        // $this->result->execute();
-        // $this->rows = $this->result->fetchAll();
-
-
-        // // output data of each row
-        // foreach ($this->rows as $row) {
-        //     echo "le titre: " . $row["title"] . "<br> - Contenu: " . $row["content"] . "<br> " . $row["date_created"] . "<br>";
-        //}
-
-        //return $this->bdd;
     }
-
-    /* A retirer - Début - Ne pas analyser ce code */
     public function prepare(string $sq): void
     {
         $table = explode('from', $sq);
