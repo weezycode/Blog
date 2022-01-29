@@ -8,7 +8,7 @@
                     <div class="my-5">
                          <h3 class ="text-center" id="contact">Modifier le post</h3>
                          {% if session.user.id != post.idAuthor %}
-                         <p> Attention vous v'êtes sur le point de modifier le post de @ {{ post.pseudo}}</p> {% endif %}
+                         <p class="danger"> Attention vous êtes sur le point de modifier le post de @ {{ post.pseudo}}</p> {% endif %}
                         <form action="index.php?action=updatePost" method ="POST" class = "was-valided">
                             <div class="form-floating">
                                 <input type="hidden" value="{{ post.id}}"  name="id_article"/>
@@ -21,7 +21,7 @@
                                 <label for="name">Châpo</label>
                             </div>
                             <div class="form-floating">
-                                <textarea class="form-control" name="content"  style="height: 12rem" required>{{ post.content}}</textarea>
+                                <textarea class="form-control" name="content"  style="height: 20rem" required>{{ post.content}}</textarea>
                                 <label for="message">Post</label>
                             </div>
                                 <button type="submit" value ="submit" class="btn btn-secondary text-uppercase text-center" id="submitButton" >Poster</button>

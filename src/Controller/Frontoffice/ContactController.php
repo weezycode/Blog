@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace  App\Controller\Frontoffice;
 
 use App\View\View;
-use App\Service\Http\Request;
-use App\Service\FormValidator\ValidForm;
-use App\Service\Http\Session\Session;
 use App\Service\SendEmail;
+use App\Service\Http\Request;
+use App\Service\Http\Response;
+use App\Service\Http\Session\Session;
+use App\Service\FormValidator\ValidForm;
+use App\Controller\Frontoffice\HomeController;
 
 final class ContactController
 {
@@ -23,29 +25,33 @@ final class ContactController
 
     public function contactForm()
     {
+        $response = new HomeController($this->view);
         if ($this->infoContact === null) {
-            header('Location: index.php');
             $this->session->addFlashes('error', 'Tous les champs doivent être saisis');
+            return $response->displayIndex();
         }
-        $this->sendEmail = new SendEmail($this->session);
+        $this->sendEmail = new SendEmail($this->view);
         $name = ValidForm::purifyAll($this->infoContact['nom']);
         $lname = ValidForm::purifyAll($this->infoContact['prenom']);
         $message = ValidForm::purifyAll($this->infoContact['message']);
         $email = ValidForm::purifyContent($this->infoContact['email']);
 
 
-        if (!isset($name)) {
-            header('Location: index.php');
+        if (!ctype_alnum($name)) {
+
             $this->session->addFlashes('warning', "Le champ  nom n'est pas correct.");
+            return $response->displayIndex();
         }
-        if (!isset($lname)) {
+        if (!ctype_alnum($lname)) {
             $this->session->addFlashes('warning', "Le champ  prénom n'est pas correct.");
+            return $response->displayIndex();
         }
-        if (!isset($message)) {
+        if (!ctype_alpha($message)) {
             $this->session->addFlashes('warning', "Le champ  message n'est pas correct ou ne doit pas être vide.");
         }
         if (!ValidForm::is_email($email)) {
             $this->session->addFlashes('warning', "Le champ  email n'est pas correct.");
+            return $response->displayIndex();
         }
         if (isset($name) and isset($lname) and isset($email) and isset($message)) {
 
@@ -53,6 +59,7 @@ final class ContactController
             $this->sendEmail->SendEmail($name, $lname, $email, $message);
             $this->session->addFlashes('success', "Votre message a bien été envoyé.");
         }
+
 
         header('Location: index.php');
     }

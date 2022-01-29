@@ -35,7 +35,7 @@ CREATE TABLE `article` (
   `content` text NOT NULL,
   `date_created` datetime NOT NULL,
   `date_up` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `article`
@@ -58,7 +58,7 @@ CREATE TABLE `comment` (
   `content` text NOT NULL,
   `date_comment` datetime NOT NULL,
   `display_status` enum('pending','granted','rejected') NOT NULL DEFAULT 'pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `comment`
@@ -81,7 +81,7 @@ CREATE TABLE `user` (
   `passwd` varchar(255) NOT NULL,
   `status` enum('member','admin','superadmin','') NOT NULL DEFAULT 'member',
   `date_created` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `user`

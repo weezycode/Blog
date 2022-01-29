@@ -1,8 +1,18 @@
 {% include "/frontoffice/header.html.twig" %} 
-        <main>            
-            {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
-                <h2 class="danger text-center"> {{ message }} </h2>
-            {% endfor %}
-        </main>
+
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- Post preview-->
+                <div class="post-preview">
+                    {% for message in flashes %}
+                        <div class="alert alert-dark alert-dismissible">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong>{{ message }} </strong> 
+                        </div>{% endfor %}
+                </div>
+            </div>  
+        </div>
+    </div>
 {% block content %}{% endblock %}
 {% include "/frontoffice/footer.html.twig" %} 

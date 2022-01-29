@@ -41,6 +41,7 @@ final class ArticleController
     public function displayAllAction(): Response
     {
 
+
         $posts = $this->postRepository->findAll();
 
 

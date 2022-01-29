@@ -19,6 +19,7 @@ use App\Controller\Frontoffice\UserController;
 use App\Controller\Frontoffice\ArticleController;
 use App\Controller\Frontoffice\CommentController;
 use App\Controller\Frontoffice\ContactController;
+use App\Controller\Backoffice\AdminUserController;
 use App\Controller\Frontoffice\Error404Controller;
 use App\Controller\backoffice\AdminArticleController;
 
@@ -103,8 +104,8 @@ final class Router
             $commentRepo = new CommentRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
             $controller = new CommentController($this->request, $userRepo, $this->session, $commentRepo, $this->view, $postRepo);
-            return $controller->addComment();
 
+            return $controller->addComment();
 
             // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
@@ -119,25 +120,85 @@ final class Router
             $userRepo = new UserRepository($this->database);
             $controller = new UserController($this->request, $userRepo, $this->view, $this->session);
 
-            return $controller->signAction();
-        } elseif ($action === 'signup') {
+            return $controller->signUpAction($this->request);
+        } elseif ($action === 'deleteMember') {
+            $userRepo = new UserRepository($this->database);
+            $controller = new AdminUserController($this->request, $userRepo, $this->view, $this->session);
+            return $controller->AdmindeleteUser($this->request);
+        } elseif ($action === 'deleteMe') {
             $userRepo = new UserRepository($this->database);
             $controller = new UserController($this->request, $userRepo, $this->view, $this->session);
-
-            return $controller->signUpAction();
+            return $controller->deleteUser($this->request);
         } elseif ($action === 'admin') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
 
             return $controller->Admin();
         } elseif ($action === 'displayForUpdatePost' && $this->request->hasQuery('id')) {
 
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
             return $controller->displayForUpdatePost((int) $this->request->getQuery('id'));
 
             // *** @Route http://localhost:8000/?action=login ***
+        } elseif ($action === 'updatePost') {
+            $userRepo = new UserRepository($this->database);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
+
+            return $controller->updatePost();
+        } elseif ($action === 'displayToAddPost') {
+            $userRepo = new UserRepository($this->database);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
+
+            return $controller->displayToAddPost();
+        } elseif ($action === 'addPost') {
+            $userRepo = new UserRepository($this->database);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
+
+            return $controller->addPost();
+        } elseif ($action === 'deletePost') {
+            $userRepo = new UserRepository($this->database);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
+
+            return $controller->deletePost();
+        } elseif ($action === 'displayAllUser') {
+            $userRepo = new UserRepository($this->database);
+            $controller = new AdminUserController($this->request, $userRepo, $this->view, $this->session);
+
+            return $controller->displayAllUser();
+        } elseif ($action === 'listComment') {
+            $commentRepo = new CommentRepository($this->database);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
+
+            return $controller->displayAllComment($commentRepo);
+        } elseif ($action === 'isGrantedComment') {
+            $commentRepo = new CommentRepository($this->database);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
+
+            return $controller->updateCommentStatus($commentRepo);
+        } elseif ($action === 'deleteComment') {
+            $commentRepo = new CommentRepository($this->database);
+            $postRepo = new ArticleRepository($this->database);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request);
+
+            return $controller->deleteComment($commentRepo);
+        } elseif ($action === 'superAdminPage') {
+            $userRepo = new UserRepository($this->database);
+            $controller = new AdminUserController($this->request, $userRepo, $this->view, $this->session);
+
+            return $controller->displayAllUserSupra();
+        } elseif ($action === 'changeStatusUser') {
+            $userRepo = new UserRepository($this->database);
+            $controller = new AdminUserController($this->request, $userRepo, $this->view, $this->session);
+
+            return $controller->updateUser($this->request);
         } else {
             $controller = new Error404Controller($this->view);
             return $controller->displayError();

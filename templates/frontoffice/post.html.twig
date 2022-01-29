@@ -10,18 +10,22 @@
                     <header class="mb-4">
                         <!-- Post title-->
                         <h1 class="fw-bolder mb-1 text-center">{{ post.title }}</h1>
-                        <h1 class="fw-bolder mb-1 text-center">{{ pseudo.author }}</h1>
                         <!-- Post meta content-->
                     </header>
                     <!-- Preview image figure-->
                     <figure class="mb-4 text-center">
-                        <div class="text-muted fst-italic mb-2">Publié le {{ post.DateCreated | date("d/m/Y") }} par {{ post.pseudo}}</div><img class="img-fluid rounded"
-                            src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                       <img class="img-fluid rounded"
+                            src="images/MOUDOU.png" alt="..." /></figure>
                     <!-- Post content-->
                     <section class="mb-5">
                         <p class="fs-5 mb-4">{{post.shortContent}}</p>
                         <p class="fs-5 mb-4">{{post.content}}</p>
-                        <div class="text-muted fst-italic mb-2">Dernière modification {{ post.DateUp| date("d/m/Y") }} à {{ post.DateUp| date("H:m") }}</div>
+                        <div class="text-muted fst-italic mb-2">   
+                        {% if post.DateCreated < post.dateUp %}
+                            <em>dernière mise à jour le {{post.dateUp | date("d/m/Y")}}</em>
+                            {% else %}
+                            <em>Publié le {{post.DateCreated | date("d/m/Y")}}</em> 
+                        {% endif %} par {{ post.pseudo}}</div>
                     </section>
                 </article>
                 <!-- Comments section-->

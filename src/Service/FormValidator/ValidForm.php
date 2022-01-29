@@ -15,7 +15,7 @@ final class ValidForm
      */
     public static function purify($data)
     {
-        if ((isset($data) && ($data != '  ')) && strlen($data) > 5) {
+        if ((isset($data) && ($data != '  ')) && !is_null($data) && strlen($data) > 5) {
             $data = trim($data);
             $data = stripslashes($data);
             $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
@@ -23,9 +23,17 @@ final class ValidForm
             return $data;
         }
     }
+
+    public static function purifyPassword($value)
+    {
+        if (!is_null($value) && preg_match('/^[[:alnum:][:punct:]]+$/', $value) && !empty($value)) {
+            return true;
+        }
+    }
+
     public static function purifyAll($data)
     {
-        if ((isset($data) && ($data !== "")) && strlen(trim($data)) > 0 && !empty($data)) {
+        if ((isset($data) && ($data !== "")) && !is_null($data) && strlen(trim($data)) > 0 && !empty($data)) {
             //$data = trim($data);
             $data = is_array($data) ?
                 array_map("stripslashes_deep", $data) :
@@ -38,14 +46,14 @@ final class ValidForm
     /** * Check if is not empty * * @param $data * * @return bool */
     public static function purifyContent($data)
     {
-        if (isset($data) && ($data != "")) {
+        if (isset($data) && !is_null($data) && ($data != "")) {
             return $data;
         }
     }
     /** * Check if is alpha * * @param $value * * @return bool */
     public static function is_alpha($value)
     {
-        if (preg_match("/^[a-zA-Z]+$/", $value) && !empty($value)) {
+        if (!is_null($value) && preg_match("/^[a-zA-Z-']/", $value) && !empty($value)) {
             return true;
         }
     }

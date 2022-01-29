@@ -9,6 +9,7 @@ use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\FormValidator\ValidForm;
 use App\Service\Http\Session\Session;
+use App\Service\Route;
 use App\Service\SendEmail;
 
 final class HomeController
@@ -26,8 +27,8 @@ final class HomeController
     }
     public function displayIndex(): Response
     {
+        $home = new Route($this->view);
 
-
-        return new Response($this->view->render(['template' => 'home']));
+        return $home->displayIndex();
     }
 }
