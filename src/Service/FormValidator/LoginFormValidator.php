@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace  App\Service\FormValidator;
 
-use App\Model\Entity\User;
 use App\Service\Http\Request;
 use App\Service\Http\Session\Session;
 use App\Model\Repository\UserRepository;

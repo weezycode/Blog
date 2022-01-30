@@ -63,7 +63,6 @@ final class AdminUserController
 
             ]));
         } else {
-            // $response = new Error404Controller($this->view);
 
             return $redirecting->redirecting();
         }

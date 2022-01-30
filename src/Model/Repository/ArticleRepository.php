@@ -44,7 +44,7 @@ final class ArticleRepository
     {
 
 
-        $req = $this->bdd->prepare('SELECT * FROM article ');
+        $req = $this->bdd->prepare('SELECT * FROM article ORDER BY date_up DESC ');
         $req->execute();
         if ($req === null) {
             return null;
@@ -92,7 +92,7 @@ final class ArticleRepository
             'content' => $content,
         ];
 
-        $req = $this->bdd->prepare('UPDATE article SET id_author =:id_author, title =:title, short_content =:short_content, content =:content, date_up =NOW() WHERE id =:id');
+        $req = $this->bdd->prepare('UPDATE article SET id_author =:id_author, title =:title, short_content =:short_content, content =:content, date_up = NOW() WHERE id =:id');
 
 
         $req->execute($data);

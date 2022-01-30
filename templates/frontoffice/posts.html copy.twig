@@ -1,0 +1,36 @@
+
+ {% extends "/frontoffice/base.html.twig" %} 
+ {% block title %}Liste des posts{% endblock %}
+ {% block content %} 
+<body>
+ <!-- Page header with logo and tagline-->
+
+        
+            <div class="text-center my-5">
+                <h1 class="fw-bolder">Tous les blogs posts</h1>
+            </div>
+  
+    <!-- Page content-->
+  <div class="container mt-5">
+    <div class="row">
+    {% for post in posts %}
+        <div class="col-md-4">
+            <div class="card p-3">
+                <div class="d-flex flex-row mb-3"><img src="images/MOUDOU-logo.png" width="70">
+                    <div class="d-flex flex-column ml-2"><span class="text-black-50">{{ post.title}}</span></div>
+                </div>
+                <h6 class="text-truncate">{{ post.shortContent}}</h6>
+                <div class="d-flex justify-content-between install mt-3"> 
+                    {% if post.DateCreated < post.dateUp %}
+                        <em>dernière mise à jour le {{post.dateUp | date("d/m/Y")}}</em>
+                    {% else %}
+                        <em>Publié le {{post.DateCreated | date("d/m/Y")}}</em> 
+                    {% endif %} <a href="index.php?action=articledetails&id={{ post.id}}"><span class="text-primary">View&nbsp;<i class="fa fa-angle-right"></i></span></a></div>
+            </div>
+        </div>
+         {% endfor %}  
+    </div>
+</div>
+{% endblock %}
+
+

@@ -23,8 +23,6 @@ use App\Controller\Backoffice\AdminUserController;
 use App\Controller\Frontoffice\Error404Controller;
 use App\Controller\backoffice\AdminArticleController;
 
-// TODO cette classe router est un exemple très basic. Cette façon de faire n'est pas optimale
-// TODO Le router ne devrait pas avoir la responsabilité de l'injection des dépendances
 final class Router
 {
     private PDO $bdd;

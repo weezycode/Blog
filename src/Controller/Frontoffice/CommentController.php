@@ -16,7 +16,6 @@ use App\Service\FormValidator\ValidForm;
 use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
 
-// TODO => Réfléchir à une Class FormValidator générique. Cette classe n'est pas optimal.
 
 final class CommentController
 {
@@ -47,7 +46,7 @@ final class CommentController
         $idPost = ValidForm::purifyContent($this->infoUser['id_article']);
         $content = (ValidForm::purifyAll($this->infoUser['content']));
 
-        if (!isset($idUser) || !isset($idPost) || !isset($content)) {
+        if (!isset($content)) {
             $this->session->addFlashes('warning', "Vérifiez votre saisis !");
             return $redirecting->redirectingPostcomment();
         }
@@ -57,15 +56,17 @@ final class CommentController
         if (!$postRepo->getId()) {
             $this->session->addFlashes('warning', "Ne mofifiez pas l'id du post !");
             return $redirecting->redirectingPostcomment();
-        }
-
-        if (!$user->getId()) {
+        } else if (!$user->getId()) {
             $this->session->addFlashes('warning', "Ne mofifiez pas votre id !");
             return $redirecting->redirectingPostcomment();
-        }
+        } else {
 
-        $this->commentRepository->addComment($idUser, $idPost, $content);
-        $this->session->addFlashes('success', "Félicitaion votre commentaire sera publié aprés validation");
+            $idUser = $user->getId();
+            $idPost = $postRepo->getId();
+
+            $this->commentRepository->addComment($idUser, $idPost, $content);
+            $this->session->addFlashes('success', "Félicitaion votre commentaire sera publié aprés validation");
+        }
 
         return $redirecting->redirectingPostcomment();
     }

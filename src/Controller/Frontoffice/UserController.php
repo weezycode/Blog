@@ -70,7 +70,9 @@ final class UserController
         $this->sendEmail = new SendEmail($this->view);
         $signupFormValid = new SignupFormValidator($request, $this->userRepository, $this->session);
         if ($request->getMethod() === 'POST') {
+
             if ($signupFormValid->isValidSignup()) {
+
                 $pseudo = $request->getRequest('pseudo');
                 $email = $request->getRequest('email');
                 $password = $request->getRequest('password');
@@ -108,7 +110,7 @@ final class UserController
 
             $idUser = $request->getRequest('id_user');
             $user = $this->session->get('user');
-            if ($user->getId() !== $idUser) {
+            if ($user->getId() !== null) {
                 $this->userRepository->delete($idUser);
                 $this->session->addFlashes('success', 'Vous n\'êtes plus un membre du blog');
                 $this->logoutAction();

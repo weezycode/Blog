@@ -13,12 +13,12 @@
                         <!-- Post meta content-->
                     </header>
                     <!-- Preview image figure-->
-                    <figure class="mb-4 text-center">
+                    {# <figure class="mb-4 text-center">
                        <img class="img-fluid rounded"
-                            src="images/MOUDOU.png" alt="..." /></figure>
+                            src="images/MOUDOU.png" alt="..." /></figure> #}
                     <!-- Post content-->
                     <section class="mb-5">
-                        <p class="fs-5 mb-4">{{post.shortContent}}</p>
+                        <strong class="fs-5 mb-4">{{post.shortContent}}</strong>
                         <p class="fs-5 mb-4">{{post.content}}</p>
                         <div class="text-muted fst-italic mb-2">   
                         {% if post.DateCreated < post.dateUp %}
@@ -46,8 +46,9 @@
                 </div>
             </div>    
                 {% endfor %}
-            {% else %}
+           
             <div class="bg-light p-2">
+             {% else %}
                 <h4>Aucun commentaires</h4>
             {% endif %}
             </div>

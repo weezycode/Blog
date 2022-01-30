@@ -37,7 +37,6 @@ final class Session
         unset($this->sessionParamBag[$name]);
     }
 
-    // TODO Gestion de plusieurs message flash
     public function addFlashes(string $type, string $message): void
     {
         $this->set('flashes', [$type => $message]);

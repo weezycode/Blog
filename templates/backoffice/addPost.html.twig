@@ -14,11 +14,9 @@
                                 <label for="name">Titre</label>
                             </div>
                             <div class="form-floating">
-                                <input class="form-control" name="short_content" type="text" value ="{{ _post.short_content}}" required />
-                                <label for="name">Châpo</label>
-                            </div>
+                             <textarea class="form-control" name="short_content" style="height: 5rem" value= "{{ _post.short_content}}"  required /></textarea><label for="name">Châpo</label></div>
                             <div class="form-floating">
-                                <textarea class="form-control" name="content"  style="height: 20rem" required>{{ _post.content}}</textarea>
+                                <textarea class="form-control" name="content"  style="height: 20rem" value="{{ _post.content}}"required></textarea>
                                 <label for="message">Post</label>
                             </div>
                                 <button type="submit" value ="submit" class="btn btn-secondary text-uppercase text-center" id="submitButton" >Poster</button>

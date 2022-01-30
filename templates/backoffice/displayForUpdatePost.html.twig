@@ -13,11 +13,12 @@
                             <div class="form-floating">
                                 <input type="hidden" value="{{ post.id}}"  name="id_article"/>
                                 <input type="hidden" value="{{session.user.id}}"  name="id_author"/>
-                                <input class="form-control" name="title"  type="text" value ="{{ post.title}}"required />
+                                <input class="form-control" name="title" type="text" value = 
+                                "{{ post.title}}"required />
                                 <label for="name">Titre</label>
                             </div>
                             <div class="form-floating">
-                                <input class="form-control" name="short_content" type="text" value ="{{ post.shortContent}}" required />
+                                <textarea class="form-control" name="short_content" style="height: 7rem"  required />{{ post.shortContent}}</textarea>
                                 <label for="name">Châpo</label>
                             </div>
                             <div class="form-floating">

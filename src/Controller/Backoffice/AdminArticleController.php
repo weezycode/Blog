@@ -83,25 +83,21 @@ final class AdminArticleController
                 $this->session->addFlashes('warning', "Tous les champs ne sont pas remplis ou corrects.");
                 return $this->Admin();
             }
-
-            $idUser = ValidForm::purifyContent($this->infoUser['id_author']);
             $title = ValidForm::purifyAll($this->infoUser['title']);
             $shortContent = ValidForm::purifyAll($this->infoUser['short_content']);
             $content = (ValidForm::purifyAll($this->infoUser['content']));
 
-            if (!isset($idUser)) {
-                $this->session->addFlashes('warning', "L'id de l'utilisateur n'est pas correct.");
-                return $this->Admin();
-            } elseif (!isset($title)) {
+            if (!isset($title)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ titre, mettez que tu texte !.");
             } elseif (!isset($shortContent)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ châpo, mettez que tu texte.");
             } elseif (!isset($content)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ du post, mettez que tu texte.");
             } else {
-                if ($isAdmin->getId() !== $idUser) {
+                if (!$isAdmin->getId()) {
                     $this->session->addFlashes('warning', "Attention n'essayez pas de modifier l'id de l'utilisateur");
                 }
+                $idUser = $isAdmin->getId();
                 $this->postRepository->createPost($idUser, $title, $shortContent, $content);
                 $this->session->addFlashes('success', "Félicitaion votre post a été ajouté!");
                 return $this->Admin();
@@ -154,31 +150,36 @@ final class AdminArticleController
                 return $this->Admin();
             }
 
-            $idPost = ValidForm::purifyContent($this->infoUser['id_article']);
-            $idUser = ValidForm::purifyContent($this->infoUser['id_author']);
+            $idPost = $this->infoUser['id_article'];
             $title = ValidForm::purifyAll($this->infoUser['title']);
             $shortContent = ValidForm::purifyAll($this->infoUser['short_content']);
             $content = (ValidForm::purifyAll($this->infoUser['content']));
 
+
             if (!isset($idPost)) {
                 $this->session->addFlashes('warning', "L'ID de l'article n'existe pas.");
                 return $this->Admin();
-            } elseif (!isset($idUser)) {
-                $this->session->addFlashes('warning', "L'id de l'utilisateur n'est pas correct.");
-                return $this->Admin();
             } elseif (!isset($title)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ titre, mettez que tu texte !.");
+                return $this->Admin();
             } elseif (!isset($shortContent)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ châpo, mettez que tu texte.");
+                return $this->Admin();
             } elseif (!isset($content)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ du post, mettez que tu texte.");
+                return $this->Admin();
             } else {
+
+                if (!$isAdmin->getId()) {
+                    $this->session->addFlashes('warning', "Attention n'essayez pas de modifier l'id de l'utilisateur");
+                    return $this->Admin();
+                }
+                $idUser = $isAdmin->getId();
+
 
                 $postRepo = $this->postRepository->findOneBy(['id' => $idPost]);
 
-                if ($isAdmin->getId() !== $idUser) {
-                    $this->session->addFlashes('warning', "Attention n'essayez pas de modifier l'id de l'utilisateur");
-                } elseif ($postRepo->getId() !== $idPost) {
+                if (!$postRepo->getId()) {
                     $this->session->addFlashes('warning', "Attention n'essayez pas de modifier l'id du post");
                     return $this->Admin();
                 }

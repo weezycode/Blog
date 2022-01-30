@@ -18,7 +18,7 @@ final class Response
 
     public function send(): void
     {
-        //echo $this->statusCode . ' ' . implode(',', $this->headers); // TODO Il faut renvoyer aussi le status de la réponse
+        //echo $this->statusCode . ' ' . implode(',', $this->headers); 
         echo $this->content;
     }
 
