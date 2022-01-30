@@ -25,16 +25,13 @@ final class Response
     public function redirecting()
     {
         header('Location: index.php');
-        die;
     }
     public function redirectingLogin()
     {
         header('Location: index.php?action=login');
-        die;
     }
     public function redirectingPostcomment()
     {
         header('Location: index.php?action=article');
-        die;
     }
 }
