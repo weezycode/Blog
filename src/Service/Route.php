@@ -56,7 +56,7 @@ final class Route
     public function userListSuperAdmin()
     {
         header('Location:index.php?action=superAdminPage');
-        die;
+        exit;
     }
 
 
@@ -64,16 +64,17 @@ final class Route
     public function redirecting()
     {
         header('Location: index.php');
-        die;
+        exit;
     }
     public function redirectingLogin()
     {
         header('Location: index.php?action=login');
-        die;
+        exit;
     }
+
     public function redirectingPostcomment()
     {
         header('Location: index.php?action=article');
-        die;
+        exit;
     }
 }
