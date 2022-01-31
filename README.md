@@ -52,4 +52,6 @@ On the edit page of a blog article, the user can edit the title, chapô, author 
 
 In the footer menu, there must be a link to access the blog administration
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e16413a70eca416eb34ba317472e6304)](https://www.codacy.com/gh/weezycode/Blog/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=weezycode/Blog&amp;utm_campaign=Badge_Grade?branch=dev)
+
 
