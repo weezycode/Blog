@@ -26,7 +26,6 @@ final class View
         $this->twig->addGlobal('_session', $_SESSION);
         $this->twig->addGlobal('_post', $_POST);
         $this->twig->addGlobal('_get', $_GET);
-        $this->twig->addGlobal('_serverSelf', $_SERVER['PHP_SELF']);
 
         return $this->twig->render("frontoffice/${data['template']}.html.twig", $data['data']);
     }
