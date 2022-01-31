@@ -10,18 +10,19 @@ use App\Service\Database;
 use App\Model\Entity\Article;
 use App\Model\Entity\User;
 use App\Model\Repository\UserRepository;
+use App\Service\Http\Response;
+use App\Service\Route;
 
 final class ArticleRepository
 {
     private PDO $bdd;
-    private $author;
 
     public function __construct(Database $database)
     {
         $this->bdd = $database->getPDO();
     }
 
-    public function findOneBy(array $criteria, array $orderBy = null): ?Article
+    public function findOneBy(array $criteria): ?Article
     {
         $req = $this->bdd->prepare('SELECT * FROM article  where id = :id');
         $req->execute($criteria);
@@ -34,7 +35,8 @@ final class ArticleRepository
         foreach ($pseudo as $value) {
         }
         if ($data['id'] === null) {
-            header('Location: index.php?action=perdu');
+            $route = new Response();
+            return $route->redirectingLost();
         }
         return $data === null ? $data :
             new Article((int)$data['id'], (int)$data['id_author'], (string)$data['title'], (string)$data['short_content'], (string)$data['pseudo'] = $value, (string)$data['content'], $data['date_created'], $data['date_up']);
@@ -61,7 +63,8 @@ final class ArticleRepository
             foreach ($pseudos as $pseudo) {
             }
             if ($post['id'] === null) {
-                header('Location: index.php?action=perdu');
+                $route = new Response();
+                return $route->redirectingLost();
             }
 
             $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] = $pseudo, $post['content'], $post['date_created'], $post['date_up']);

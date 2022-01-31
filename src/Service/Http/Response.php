@@ -22,16 +22,8 @@ final class Response
         echo $this->content;
     }
 
-    public function redirecting()
+    public function redirectingLost()
     {
-        header('Location: index.php');
-    }
-    public function redirectingLogin()
-    {
-        header('Location: index.php?action=login');
-    }
-    public function redirectingPostcomment()
-    {
-        header('Location: index.php?action=article');
+        header('Location: index.php?action=perdu');
     }
 }
