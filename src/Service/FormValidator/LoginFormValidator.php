@@ -11,7 +11,6 @@ use App\Model\Repository\UserRepository;
 final class LoginFormValidator
 {
     private ?array $infoUser = [];
-    private ?array $error = [];
 
     public function __construct(private Request $request, private UserRepository $userRepository, private Session $session)
     {
