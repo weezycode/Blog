@@ -36,13 +36,28 @@ final class CommentRepository
         return $comments;
     }
 
-    public function findAll(): array
+    /**
+     * Return Comments from a post
+     *
+     * @param $postId
+     * @return array|mixed
+     */
+    public function findAll()
     {
-        $req = $this->bdd->prepare('SELECT * FROM comment ORDER BY date_comment DESC');
-        $req->execute();
-        $req->setFetchMode(PDO::FETCH_CLASS, Comment::class);
+        $req = $this->bdd->prepare('SELECT comment.id, comment.id_user, content, display_status, id_article, user.pseudo, date_comment FROM comment INNER JOIN user on comment.id_user=user.id WHERE id_article = id_article ORDER BY date_comment DESC');
 
-        return $req->fetch();
+        $req->execute();
+        $comment = $req->fetchAll();
+
+        $comments = [];
+
+        foreach ($comment as $come) {
+
+            $comments[] = new Comment((int) $come['id'], (int)$come['id_user'], (string)$come['pseudo'], (int) $come['id_article'], (string)$come['content'], $come['date_comment'], (string)$come['display_status']);
+        }
+
+
+        return $comments;
     }
 
     public function addComment($idUser, $idPost, $content)
@@ -61,10 +76,22 @@ final class CommentRepository
         $req->execute($data);
     }
 
-    public function delete(Comment $comment)
+    public function updateComment($id)
     {
+        $data = [
+            'id' => $id,
+            'display_status' => 'granted'
+        ];
+        $req = $this->bdd->prepare('UPDATE comment SET display_status =:display_status WHERE id =:id');
+        $req->execute($data);
+    }
+
+    public function deleteComment($id)
+    {
+        $data = [
+            'id' => $id,
+        ];
         $req = $this->bdd->prepare('DELETE FROM comment  WHERE id = :id');
-        $req->bindValue(':id', $comment->getId());
-        $req->execute();
+        $req->execute($data);
     }
 }

@@ -1,0 +1,30 @@
+ {% extends "/backoffice/base.html.twig" %} 
+ {% block title %}{% endblock %}
+ {% block content %}
+    <main class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="my-5">
+                         <h3 class ="text-center" id="contact">Ajouter un post</h3>
+                        <form action="index.php?action=addPost" method ="POST" class = "was-valided">
+                            <div class="form-floating">
+                                <input type="hidden" value="{{session.user.id}}"  name="id_author"/>
+                                <input class="form-control" name="title"  type="text" value ="{{ _post.title}}"required />
+                                <label for="name">Titre</label>
+                            </div>
+                            <div class="form-floating">
+                             <textarea class="form-control" name="short_content" style="height: 5rem" value= "{{ _post.short_content}}"  required /></textarea><label for="name">Châpo</label></div>
+                            <div class="form-floating">
+                                <textarea class="form-control" name="content"  style="height: 20rem" value="{{ _post.content}}"required></textarea>
+                                <label for="message">Post</label>
+                            </div>
+                                <button type="submit" value ="submit" class="btn btn-secondary text-uppercase text-center" id="submitButton" >Poster</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </main>
+
+ {% endblock %}

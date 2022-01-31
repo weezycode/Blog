@@ -11,7 +11,7 @@ final class Comment
     public function __construct(
         private int $id,
         private int $IdUser,
-        private string $pseudoUser, // TODO l'entity User serait plus approprié
+        private string $pseudoUser,
         private int $idPost,
         private string $content,
         private  $dateComment,

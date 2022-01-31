@@ -23,6 +23,10 @@ final class View
     {
         $data['data']['session'] = $this->session->getAll();
         $data['data']['flashes'] = $this->session->getFlashes();
+        $this->twig->addGlobal('_session', $_SESSION);
+        $this->twig->addGlobal('_post', $_POST);
+        $this->twig->addGlobal('_get', $_GET);
+        $this->twig->addGlobal('_serverSelf', $_SERVER['PHP_SELF']);
 
         return $this->twig->render("frontoffice/${data['template']}.html.twig", $data['data']);
     }
@@ -30,6 +34,9 @@ final class View
     {
         $data['data']['session'] = $this->session->getAll();
         $data['data']['flashes'] = $this->session->getFlashes();
+        $this->twig->addGlobal('_session', $_SESSION);
+        $this->twig->addGlobal('_post', $_POST);
+        $this->twig->addGlobal('_get', $_GET);
 
         return $this->twig->render("backoffice/${data['template']}.html.twig", $data['data']);
     }

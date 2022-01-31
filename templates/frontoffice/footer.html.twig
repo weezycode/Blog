@@ -27,7 +27,16 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.php?action=admin">Administrer le Blog</a></li>
+                        
+                         {% if session.user.status == 'member' %}
+                          <li class="nav-item"><a href="javascript:void(0)" class="nav-link px-lg-3 py-3 py-lg-4"  data-bs-toggle="popover" title="Bonjour,{{ session.user.pseudo }}" data-bs-content="Vous nêtes pas éditeur, contactez moi pour en savoir plus ">Administrer le Blog -></a></li>
+                        
+                                {% elseif session.user.status == 'admin' or session.user.status == 'superadmin' %}
+                                <li class="nav-item"><a href="index.php?action=admin" class="nav-link px-lg-3 py-3 py-lg-4">Administrer le Blog -></a></li>
+                        {% else %}
+                         <li class="nav-item"><a href="javascript:void(0)" class="nav-link px-lg-3 py-3 py-lg-4"  data-bs-toggle="popover" title="Oupssss Connectez vous" data-bs-content="Si vous n'êtes pas un membre , ni un éditeur, inscrivez vous ou contactez moi pour plus d'info ">Administrer le Blog -></a></li>
+                         {% endif %}
+
                     </ul>
                     <div class="small text-center text-muted fst-italic">Copyright &copy; Moudou Dicko 2021
                     </div>

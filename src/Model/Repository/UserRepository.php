@@ -20,20 +20,8 @@ final class UserRepository
     {
         $req = $this->bdd->query('SELECT * FROM user');
 
-
         $req->setFetchMode(PDO::FETCH_CLASS, User::class);
         $req->execute();
-    }
-
-    public function find(int $id)
-    {
-        $req = $this->bdd->prepare('SELECT * FROM user WHERE id = :id');
-
-        $req->bindValue(':id', $id);
-        $req->execute();
-        $req->setFetchMode(PDO::FETCH_CLASS, User::class);
-
-        return $req->fetchAll();
     }
 
     public function findUser()
@@ -62,31 +50,32 @@ final class UserRepository
 
         $req->execute($data);
     }
-    /**
-     * Return if User already exist
-     *
-     * @param  $username
-     * @param  $email
-     * @return bool|false|\PDOStatement
-     */
 
-
-    public function delete(User $user)
+    public function delete($idUser)
     {
-        $req = $this->bdd->prepare('DELETE FROM users WHERE id = :id ');
-        $req->bindValue(':id', $user->getId());
-        $req->execute();
+        $data = [
+            'id' => $idUser,
+        ];
+        $req = $this->bdd->prepare('DELETE FROM user WHERE id = :id ');
+        $req->execute($data);
     }
+
+    public function updateStatusUser($idUser, $status)
+    {
+        $data = [
+            'id' => $idUser,
+            'status' => $status,
+        ];
+        $req = $this->bdd->prepare('UPDATE user SET status =:status WHERE id =:id');
+        $req->execute($data);
+    }
+
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
     {
         $req = $this->bdd->prepare("SELECT * FROM user WHERE email = :email");
         $data = $req->execute($criteria);
         $data = $req->fetch();
-
-        // réfléchir à l'hydratation des entités;
-        // var_dump($data);
-        // die;
 
         return $data == null ? null : new User((int)$data['id'], (string)$data['email'], (string)$data['pseudo'],  (string)$data['passwd'], (string)$data['status'], $data['date_created']);
     }

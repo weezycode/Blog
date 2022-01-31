@@ -5,17 +5,21 @@ declare(strict_types=1);
 namespace  App\Controller\Frontoffice;
 
 use App\View\View;
+use App\Service\SendEmail;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
 use App\Model\Repository\UserRepository;
+use App\Service\AccessControl;
 use App\Service\FormValidator\ValidForm;
 use App\Service\FormValidator\LoginFormValidator;
+use App\Service\FormValidator\SignupFormValidator;
+use App\Service\Route;
 
 final class UserController
 {
 
-    private ?array $infoUser = [];
+    private $sendEmail;
     public function __construct(private Request $request, private UserRepository $userRepository, private View $view, private Session $session)
     {
         $this->infoUser = $this->request->getAllRequest();
@@ -23,76 +27,97 @@ final class UserController
 
     public function signAction(): Response
     {
-
-        return new Response($this->view->render(['template' => 'sign', 'data' => []]));
+        $redirecting = new Route($this->view);
+        if ($this->session->get('user')) {
+            $redirecting->redirecting();
+        }
+        $redirecting = new Route($this->view);
+        return $redirecting->signAction();
     }
 
-    public function Admin(): Response
-    {
 
-        return new Response($this->view->renderAdmin(['template' => 'listComment', 'data' => []]));
-    }
 
 
     public function loginAction(Request $request): Response
     {
+        $redirecting = new Route($this->view);
+        $userConnect = new AccessControl($this->session, $this->view);
+
+        if ($userConnect->isUser()) {
+            return $redirecting->redirecting();
+        }
 
         $loginFormValidator = new LoginFormValidator($request, $this->userRepository, $this->session);
 
         if ($request->getMethod() === 'POST') {
             if ($loginFormValidator->isValid()) {
-                return new Response(($this->view->render(['template' => 'home'])));
+                return $redirecting->redirecting();
             }
-            $this->session->addFlashes('error', 'Mauvais identifiants');
         }
-        // $test = $this->session->get('user');
-
-        // var_dump($test->getStatus());
-        // die;
-
-
-        return new Response($this->view->render(['template' => 'login', 'data' => []]));
+        return $redirecting->loginAction();
     }
 
 
 
-    public function signUpAction()
+    public function signUpAction(Request $request): Response
     {
+        $redirectingToSign = new Route($this->view);
+        $userConnect = new AccessControl($this->session, $this->view);
 
-        if ($this->infoUser === null) {
-            $this->session->addFlashes('error', 'Tous les champs doivent être saisis');
-            return new Response($this->view->render(['template' => 'sign', 'data' => []]));
-        }
-        $pseudo = ValidForm::purify($this->infoUser['pseudo']);
-        $email = ValidForm::purifyContent($this->infoUser['email']);
-        $password = (ValidForm::purify($this->infoUser['password']));
-        if (!isset($pseudo) || !isset($password) || !isset($email) || !ValidForm::is_email($email)) {
-            $this->session->addFlashes('error', 'Tous les champs doivent être saisis');
-            return new Response($this->view->render(['template' => 'sign', 'data' => []]));
+        if ($userConnect->isUser()) {
+            return $redirectingToSign->redirecting();
         }
 
-        $passwd = password_hash($password, PASSWORD_DEFAULT);
-        $setUser = $this->userRepository->findUser();
+        $this->sendEmail = new SendEmail($this->view);
+        $signupFormValid = new SignupFormValidator($request, $this->userRepository, $this->session);
+        if ($request->getMethod() === 'POST') {
 
-        foreach ($setUser as $currentUser) {
+            if ($signupFormValid->isValidSignup()) {
 
-            if ($pseudo === $currentUser->getPseudo() || $email === $currentUser->getEmail()) {
-                $this->session->addFlashes('error', 'Cet utilisateur existe déjà !');
-                return new Response($this->view->render(['template' => 'sign', 'data' => []]));
+                $pseudo = $request->getRequest('pseudo');
+                $email = $request->getRequest('email');
+                $password = $request->getRequest('password');
+                $passwd = password_hash($password, PASSWORD_DEFAULT);
+
+                $newUser = $this->userRepository->createUser($pseudo, $email, $passwd);
+                $this->sendEmail->SendEmailRegister($pseudo, $email);
+                $this->session->set('user', $newUser);
+                $this->session->addFlashes('success', 'Félicitation vous êtes maintenant un membre et vous allez recevoir un email de confirmation!');
+
+                return $redirectingToSign->redirecting();
             }
         }
-        $newUser = $this->userRepository->createUser($pseudo, $email, $passwd);
 
-        $this->session->set('user', $newUser);
-        $this->session->addFlashes('success', 'Félicitation vous maintenant un membre !');
-        return new Response(($this->view->render(['template' => 'home'])));
+        return $redirectingToSign->signAction();
     }
 
-
-
-    public function logoutAction(): Response
+    public function logoutAction()
     {
+        $route = new Route($this->view);
         $this->session->remove('user');
-        return new Response(($this->view->render(['template' => 'home'])));
+        return $route->redirecting();
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $userConnect = new AccessControl($this->session, $this->view);
+        $route = new Route($this->view);
+
+        if ($userConnect->noConnect()) {
+            return $route->redirecting();
+        }
+
+        if ($request->getMethod() === 'POST') {
+
+            $idUser = $request->getRequest('id_user');
+            $user = $this->session->get('user');
+            if ($user->getId() !== null) {
+                $this->userRepository->delete($idUser);
+                $this->session->addFlashes('success', 'Vous n\'êtes plus un membre du blog');
+                $this->logoutAction();
+                return $route->redirecting();
+            }
+        }
+        return $route->deleteUser();
     }
 }

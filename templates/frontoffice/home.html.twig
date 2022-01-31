@@ -1,7 +1,4 @@
 {% include "/frontoffice/header.html.twig" %} 
-
-             {# TODO Gérer les différents type de message flash #}
-                {# <h2 class="danger text-center">  </h2> #}
            
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -12,13 +9,13 @@
                         <div class="alert alert-dark alert-dismissible">
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         <strong>{{ message }} </strong> 
-                    </div> {% endfor %}
+                        </div>{% endfor %}
                         <h2 class="post text-center ">A propos de moi !</h2>
-                    <p class="post-meta">Etudiant en développement web PHP/SYMFONY chez OpensClassrooms. </p>
+                        <p class="post-meta">Etudiant en développement web PHP/SYMFONY chez OpensClassrooms. </p>
                 </div>
             </div>
                 <a class= "text-center" href="CV/CV-MOUDOU-DICKO.pdf" download><button type="button" class="btn btn-secondary justify-content-center">Télécharger mon CV<i class="bi bi-download"></i></button></a>      
-    </div>
+        </div>
             <!-- Main Content-->
     <main class="mb-4">
         <div class="container px-4 px-lg-5">
@@ -28,29 +25,29 @@
                          <h3 class ="text-center" id="contact">Vous voulez me contacter c'est possible!</h3>
                         <form action="index.php?action=contact" method ="POST" class = "was-valided">
                             <div class="form-floating">
-                                <input class="form-control" name="nom" id="nom" type="text" placeholder="Enter your name..." required />
+                                <input class="form-control" name="nom" id="nom" type="text" value="{{ _post.nom }}"placeholder="Enter your name..." required />
                                 <label for="name">Nom</label>
                                 <div class="valid-feedback"></div>
                                 <div class="invalid-feedback">Le Nom est obligatoire.</div>
                             </div>
                             <div class="form-floating">
-                                <input class="form-control" name="prenom" id="name" type="text" placeholder="Enter your name..." required />
+                                <input class="form-control" name="prenom" id="name" value="{{ _post.prenom }}" type="text" placeholder="Enter your name..." required />
                                 <label for="name">Prénom</label>
                                 <div class="valid-feedback"></div>
                                 <div class="invalid-feedback">Le Prénom est obligatoire.</div>
                             </div>
                             <div class="form-floating">
-                                <input class="form-control" name="email" id="email" type="email" placeholder="Enter your email..." required/>
+                                <input class="form-control" name="email" id="email" value="{{ _post.email }}" type="email" placeholder="Enter your email..." required/>
                                 <label for="email">Adresse email</label>
                                 <div class="invalid-feedback" >L'adresse email est obligatoire.</div>
                                 <div class="valid-feedback"></div>
                             </div>
                             <div class="form-floating">
-                                <textarea class="form-control" name="message" id="message" placeholder="Entrer votre message ici..." style="height: 12rem" data-sb-validations="required"></textarea>
+                                <textarea class="form-control" name="message" id="message" placeholder="Entrer votre message ici..." style="height: 12rem" data-sb-validations="required">{{ _post.message }} </textarea>
                                 <label for="message">Message</label>
                                 <div class="invalid-feedback" data-sb-feedback="message:required">Le message est obligatoire.</div>
                             </div>
-                                <button type="submit" class="btn btn-secondary text-uppercase" id="submitButton" >Envoyer</button>
+                                <button type="submit"  value ="submit" class="btn btn-secondary text-uppercase" id="submitButton" >Envoyer</button>
                         </form>
                     </div>
                 </div>

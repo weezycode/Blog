@@ -10,6 +10,8 @@ use App\Service\Database;
 use App\Model\Entity\Article;
 use App\Model\Entity\User;
 use App\Model\Repository\UserRepository;
+use App\Service\Http\Response;
+use App\Service\Route;
 
 final class ArticleRepository
 {
@@ -20,11 +22,7 @@ final class ArticleRepository
         $this->bdd = $database->getPDO();
     }
 
-
-
-
-
-    public function findOneBy(array $criteria, array $orderBy = null): ?Article
+    public function findOneBy(array $criteria): ?Article
     {
         $req = $this->bdd->prepare('SELECT * FROM article  where id = :id');
         $req->execute($criteria);
@@ -37,7 +35,8 @@ final class ArticleRepository
         foreach ($pseudo as $value) {
         }
         if ($data['id'] === null) {
-            header('Location: index.php?action=perdu');
+            $route = new Response();
+            return $route->redirectingLost();
         }
         return $data === null ? $data :
             new Article((int)$data['id'], (int)$data['id_author'], (string)$data['title'], (string)$data['short_content'], (string)$data['pseudo'] = $value, (string)$data['content'], $data['date_created'], $data['date_up']);
@@ -46,7 +45,8 @@ final class ArticleRepository
     public function findAll(): ?array
     {
 
-        $req = $this->bdd->prepare('SELECT * FROM article  ORDER BY date_up DESC');
+
+        $req = $this->bdd->prepare('SELECT * FROM article ORDER BY date_up DESC ');
         $req->execute();
         if ($req === null) {
             return null;
@@ -56,39 +56,55 @@ final class ArticleRepository
         $articles = [];
 
         foreach ($posts as $post) {
+            $req = $this->bdd->prepare("SELECT pseudo FROM user Where id = '" . $post['id_author'] . "' ");
+            $req->setFetchMode(PDO::FETCH_CLASS, User::class);
+            $req->execute();
+            $pseudos = $req->fetch(PDO::FETCH_ASSOC);
+            foreach ($pseudos as $pseudo) {
+            }
+            if ($post['id'] === null) {
+                $route = new Response();
+                return $route->redirectingLost();
+            }
 
-            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] =  "", $post['content'], $post['date_created'], $post['date_up']);
+            $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] = $pseudo, $post['content'], $post['date_created'], $post['date_up']);
         }
         return $articles;
     }
 
-    public function createPost(Article $post)
+    public function createPost($idUser, $title, $shortContent, $content)
     {
-        $req = $this->bdd->prepare('INSERT INTO article (id_author, title, short_content, content, date_created) VALUES(:id_author, :title, :short_content, :content, NOW(),');
-        $req->bindValue('idAuthor', $post->getIdAuthor());
-        $req->bindValue('title', $post->getTitle());
-        $req->bindValue('shortContent', $post->getShortContent());
-        $req->bindValue('content', $post->getContent());
 
-        $req->execute();
+        $data = [
+            'id_author' => $idUser,
+            'title' => $title,
+            'short_content' => $shortContent,
+            'content' => $content,
+        ];
+        $req = $this->bdd->prepare("INSERT INTO article (id_author, title, short_content, content, date_created) VALUES(:id_author, :title, :short_content, :content, NOW())");
+        $req->execute($data);
     }
 
-    public function updatePost(Article $post)
+    public function updatePost($idPost, $idUser, $title, $shortContent, $content)
     {
-        $req = $this->bdd->prepare('UPDATE article SET id_author = :idAuthor, title = :title, short_content = :shortContent, content = :content, date_up = :dateUp WHERE id = :id');
-        $req->bindValue('idAuthor', $post->getIdAuthor());
-        $req->bindValue('title', $post->getTitle());
-        $req->bindValue('shortContent', $post->getShortContent());
-        $req->bindValue('content', $post->getContent());
-        $req->bindValue('dateUp', $post->getDateUp());
+        $data = [
+            'id' => $idPost,
+            'id_author' => $idUser,
+            'title' => $title,
+            'short_content' => $shortContent,
+            'content' => $content,
+        ];
 
-        $req->execute();
+        $req = $this->bdd->prepare('UPDATE article SET id_author =:id_author, title =:title, short_content =:short_content, content =:content, date_up = NOW() WHERE id =:id');
+
+
+        $req->execute($data);
     }
 
-    public function deletePost(Article $post)
+    public function deletePost($idPost)
     {
-        $req = $this->bdd->prepare('DELETE FROM article WHERE id = :id');
-        $req->bindValue(':id', $post->getId());
-        $req->execute();
+        $data = ['id' => $idPost];
+        $req = $this->bdd->prepare('DELETE  FROM article WHERE id = :id');
+        $req->execute($data);
     }
 }

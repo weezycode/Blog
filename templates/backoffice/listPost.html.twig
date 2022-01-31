@@ -1,0 +1,37 @@
+ {% extends "/backoffice/base.html.twig" %} 
+ {% block title %}{% endblock %}
+ {% block content %}
+<div class="m-4">
+<a class="nav-link " href="index.php?action=displayToAddPost">
+                <button class="btn btn-primary">Ajouter un post</button></a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Auteur</th>
+                <th>Titre</th>
+                <th>Date</th>
+                <th>Modifier</th>
+              <th>Supprimer</th>
+            </tr>
+        </thead>
+      {% for post in posts %} 
+       <tbody>
+         
+            <tr>
+                <td>{{ post.pseudo}}</td>
+                <td>{{post.title}}</td>
+                <td>{{post.DateCreated | date("d/m/y")}}</td>
+                <td><a class="nav-link " href="index.php?action=displayForUpdatePost&id={{ post.id}}">
+                <button class="btn btn-secondary" style="height:50px;">Modifier</button></a></td>
+                <form action="index.php?action=deletePost" method ="POST">
+                <input type="hidden" value="{{ post.id}}"  name="idPost"/>
+                <td><a class="nav-link ">
+                <button class="btn btn-secondary" style="height:50px;" type="submit">Supprimer</button></a></td>
+                </form>    
+            </tr>
+            
+        </tbody>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

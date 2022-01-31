@@ -1,0 +1,27 @@
+ {% extends "/frontoffice/layout.html.twig" %} 
+ {% block title %}Incsription{% endblock %}
+ {% block content %}
+<div class="login">
+ <div class="post-preview">
+                    {% for message in flashes %}
+                        <div class="alert alert-dark alert-dismissible">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong class="danger">{{ message }} </strong> 
+                    </div> {% endfor %}
+       <form action= "index.php?action=deleteMe" method="POST">
+         {% if session.user %}<p class="text-center">Bonjour,{{ session.user.pseudo }}, vous voulez exercer votre droit de suppression ?</p> 
+         <p class="text-center">C'est votre droit ! A partir du moment où vous cliquez sur le bouton, toutes vos données seront aussi supprimées</p>      
+         {% endif %}
+       
+        <div class="form-group">
+         <form action="index.php?action=deleteMe" method ="POST">
+                <input type="hidden" value="{{ session.user.id}}"  name="id_user"/>
+                <button class="btn btn-secondary text-center" style="height:50px;" type="submit">Supprimer</button>
+            </form>  
+        </div>
+    </div>        
+
+</div>
+</div>
+
+{% endblock %}

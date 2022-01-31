@@ -1,17 +1,22 @@
- {% extends "/backoffice/base.html.twig" %} 
+ {% extends "/frontoffice/layout.html.twig" %} 
  {% block title %}Incsription{% endblock %}
  {% block content %}
 <div class="login">
-   {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
-        <h5 class="danger text-center"> {{ message }} </h5>
-    {% endfor %}
-    <form method="POST">
+ <div class="post-preview">
+                    {% for message in flashes %}
+                        <div class="alert alert-dark alert-dismissible">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong class="danger">{{ message }} </strong> 
+                    </div> {% endfor %}
+    <form  method="POST">
         <h2 class="text-center">Se connecter</h2>       
         <div class="form-group">
-            <input type="email" class="form-control formeControl" name="email" placeholder="Email" required="required">
+           <label for="email">Adresse email</label>
+            <input type="email" class="form-control formeControl" name="email" value="{{ _post.email }}"  placeholder="Email" required="required">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control formeControl" name="password" placeholder="Password" required="required">
+           <label for="email">Password</label>
+            <input type="password" class="form-control formeControl" name="password" placeholder="Password" required="required">       
         </div>
         <div class="form-group text-center">
             <button type="submit" class="button btn-primary btn-block">Se connecter</button>

@@ -10,18 +10,22 @@
                     <header class="mb-4">
                         <!-- Post title-->
                         <h1 class="fw-bolder mb-1 text-center">{{ post.title }}</h1>
-                        <h1 class="fw-bolder mb-1 text-center">{{ pseudo.author }}</h1>
                         <!-- Post meta content-->
                     </header>
                     <!-- Preview image figure-->
-                    <figure class="mb-4 text-center">
-                        <div class="text-muted fst-italic mb-2">Publié le {{ post.DateCreated | date("d/m/Y") }} par {{ post.pseudo}}</div><img class="img-fluid rounded"
-                            src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                    {# <figure class="mb-4 text-center">
+                       <img class="img-fluid rounded"
+                            src="images/MOUDOU.png" alt="..." /></figure> #}
                     <!-- Post content-->
                     <section class="mb-5">
-                        <p class="fs-5 mb-4">{{post.shortContent}}</p>
+                        <strong class="fs-5 mb-4">{{post.shortContent}}</strong>
                         <p class="fs-5 mb-4">{{post.content}}</p>
-                        <div class="text-muted fst-italic mb-2">Dernière modification {{ post.DateUp| date("d/m/Y") }} à {{ post.DateUp| date("H:m") }}</div>
+                        <div class="text-muted fst-italic mb-2">   
+                        {% if post.DateCreated < post.dateUp %}
+                            <em>dernière mise à jour le {{post.dateUp | date("d/m/Y")}}</em>
+                            {% else %}
+                            <em>Publié le {{post.DateCreated | date("d/m/Y")}}</em> 
+                        {% endif %} par {{ post.pseudo}}</div>
                     </section>
                 </article>
                 <!-- Comments section-->
@@ -42,27 +46,27 @@
                 </div>
             </div>    
                 {% endfor %}
-            {% else %}
+           
             <div class="bg-light p-2">
+             {% else %}
                 <h4>Aucun commentaires</h4>
             {% endif %}
             </div>
-               <h4> blababababab {{ post.id}} </h4>
             {% if session.user %}
         <div class="card p-3 mt-2">
             <h4> Publier un commentaire </h4>
                 <form action ="index.php?action=addComment" method ="POST">  
                     <div class="form-group">
                         <input type="hidden" value="{{ post.id}}"  name="id_article"/>
-                        <input type="hidden" value="{{session.user.id}}" id="formtoken" name="id_user"/> 
+                        <input type="hidden" value="{{session.user.id}}"  name="id_user"/> 
                     <div class="d-flex flex-row align-items-start">@{{ session.user.pseudo }}
-                    <textarea name="content"class="form-control ml-1 shadow-none textarea"></textarea></div>   
+                    <textarea name="content" id="w3review" rows="4" cols="0"  class="form-control ml-1 shadow-none textarea"></textarea></div>   
                     <div class="mt-2 text-right"><button class="btn btn-primary btn-sm shadow-none" type="submit">Poster votre commentaire</button>
                
         </div>
                 </form>
             {% else %}
-                <a class ="" href="index.php?action=login"><button class=" text-center btn btn-primary btn-sm shadow-none commentConnect " type="button">Connectez vous pour commenter</button></a>
+                <a class ="" href="index.php?action=login"><button class=" text-center btn btn-primary btn-sm shadow-none commentConnect " type="button">Connectez vous pour ajouter un commentaire</button></a>
             {% endif %}
         </div>
     </div>

@@ -1,3 +1,6 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
 .danger {
     color: red;
 }
@@ -31,4 +34,18 @@
 .commentConnect{
     margin-top: 20px;
     text-align: center;
+}
+.header-admin{
+    margin-top: 150px;
+}
+.header-admin h1{
+    margin-bottom: 50px;
+}
+.delete{
+    margin-top: 22px;
+    height: 20px;
+    border: none !important;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
 }

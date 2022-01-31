@@ -6,6 +6,7 @@ namespace  App\Controller\Frontoffice;
 
 
 use App\View\View;
+use App\Service\Route;
 use App\Service\Http\Response;
 
 final class Error404Controller
@@ -18,10 +19,10 @@ final class Error404Controller
     {
         //$this->mailer = $mailer;
     }
-    public function displayError(): Response
+    public function displayError()
     {
+        $redirecting = new Route($this->view);
 
-
-        return new Response($this->view->render(['template' => 'error/404']));
+        return $redirecting->displayError();
     }
 }
