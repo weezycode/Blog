@@ -60,6 +60,7 @@ final class SendEmail
             );
         $mailer->send($message);
     }
+
     public function SendEmailRegister($pseudo, $email)
     {
 
