@@ -24,7 +24,7 @@ final class AdminUserController
     public function displayAllUser()
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
         }
@@ -47,7 +47,7 @@ final class AdminUserController
     public function displayAllUserSupra()
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
         }
@@ -69,12 +69,11 @@ final class AdminUserController
     }
     public function AdmindeleteUser(Request $request)
     {
-        $redirecting = new Response();
         $userConnect = new AccessControl($this->session, $this->view);
         $route = new Route($this->view);
 
         if ($userConnect->noConnect()) {
-            return $redirecting->redirecting();
+            return $route->redirecting();
         }
 
         if ($request->getMethod() === 'POST') {
@@ -98,11 +97,11 @@ final class AdminUserController
     public function updateUser(Request $request)
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
-        }
         $route = new Route($this->view);
+        if (!$isUser->isAdmin()) {
+            $route->redirecting();
+        }
+
         $isAdmin = $this->session->get('user');
 
         if ($isAdmin->getStatus() === 'superadmin') {
@@ -121,6 +120,6 @@ final class AdminUserController
             }
             return $route->userListSuperAdmin();
         }
-        return $redirecting->redirecting();
+        return $route->redirecting();
     }
 }

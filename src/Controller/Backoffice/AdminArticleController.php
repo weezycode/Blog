@@ -12,7 +12,6 @@ use App\Service\Http\Session\Session;
 use App\Service\FormValidator\ValidForm;
 use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
-use App\Controller\Frontoffice\Error404Controller;
 use App\Service\Route;
 
 final class AdminArticleController
@@ -26,7 +25,7 @@ final class AdminArticleController
     public function Admin(): Response
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
         }
@@ -42,24 +41,23 @@ final class AdminArticleController
 
             ]));
         } else {
-            $response = new Error404Controller($this->view);
 
-            return $response->displayError();
+            return $redirecting->displayError();
         }
     }
 
     public function displayToAddPost(): Response
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
         }
         $isAdmin = $this->session->get('user');
 
         if ($isAdmin->getStatus() === 'admin' || $isAdmin->getStatus() === 'superadmin') {
-            $route = new Route($this->view);
-            return $route->addPost();
+
+            return $redirecting->addPost();
         } else {
 
             return $redirecting->redirecting();
@@ -69,7 +67,7 @@ final class AdminArticleController
     public function addPost()
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
 
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
@@ -102,13 +100,15 @@ final class AdminArticleController
                 $this->session->addFlashes('success', "Félicitaion votre post a été ajouté!");
                 return $this->Admin();
             }
+            return $this->Admin();
         }
+        $redirecting->redirecting();
     }
 
     public function displayForUpdatePost(int $id): Response
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
 
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
@@ -135,7 +135,7 @@ final class AdminArticleController
     public function updatePost()
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
 
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
@@ -188,6 +188,7 @@ final class AdminArticleController
                 $this->session->addFlashes('success', "Félicitaion votre post a été modifié!");
                 return $this->Admin();
             }
+            return $this->Admin();
         }
     }
 
@@ -195,7 +196,7 @@ final class AdminArticleController
     public function deletePost()
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
 
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
@@ -219,7 +220,7 @@ final class AdminArticleController
     public function displayAllComment(CommentRepository $commentRepository)
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
         }
@@ -239,7 +240,6 @@ final class AdminArticleController
 
             ]));
         } else {
-            // $response = new Error404Controller($this->view);
 
             return $redirecting->redirecting();
         }
@@ -248,7 +248,7 @@ final class AdminArticleController
     public function updateCommentStatus(CommentRepository $commentRepository)
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
         }
@@ -260,7 +260,6 @@ final class AdminArticleController
             $this->session->addFlashes('success', "Le commentaire est maintenant en ligne !");
             return $this->Admin();
         } else {
-            // $response = new Error404Controller($this->view);
 
             return $redirecting->redirecting();
         }
@@ -269,7 +268,7 @@ final class AdminArticleController
     public function deleteComment(CommentRepository $commentRepository)
     {
         $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Response();
+        $redirecting = new Route($this->view);
         if (!$isUser->isAdmin()) {
             $redirecting->redirecting();
         }
@@ -281,7 +280,6 @@ final class AdminArticleController
             $this->session->addFlashes('success', "Le commentaire a été supprimé !");
             return $this->Admin();
         } else {
-            // $response = new Error404Controller($this->view);
 
             return $redirecting->redirecting();
         }

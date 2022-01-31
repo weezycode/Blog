@@ -27,8 +27,9 @@ final class UserController
 
     public function signAction(): Response
     {
+        $redirecting = new Route($this->view);
         if ($this->session->get('user')) {
-            header('Location: index.php');
+            $redirecting->redirecting();
         }
         $redirecting = new Route($this->view);
         return $redirecting->signAction();
@@ -60,11 +61,11 @@ final class UserController
 
     public function signUpAction(Request $request): Response
     {
-        $redirecting = new Response();
+        $redirectingToSign = new Route($this->view);
         $userConnect = new AccessControl($this->session, $this->view);
 
         if ($userConnect->isUser()) {
-            return $redirecting->redirecting();
+            return $redirectingToSign->redirecting();
         }
 
         $this->sendEmail = new SendEmail($this->view);
@@ -83,27 +84,27 @@ final class UserController
                 $this->session->set('user', $newUser);
                 $this->session->addFlashes('success', 'Félicitation vous êtes maintenant un membre et vous allez recevoir un email de confirmation!');
 
-                return $redirecting->redirecting();
+                return $redirectingToSign->redirecting();
             }
         }
-        $redirectingToSign = new Route($this->view);
+
         return $redirectingToSign->signAction();
     }
 
     public function logoutAction()
     {
+        $route = new Route($this->view);
         $this->session->remove('user');
-        header('Location: index.php');
+        return $route->redirecting();
     }
 
     public function deleteUser(Request $request)
     {
-        $redirecting = new Response();
         $userConnect = new AccessControl($this->session, $this->view);
         $route = new Route($this->view);
 
         if ($userConnect->noConnect()) {
-            return $redirecting->redirecting();
+            return $route->redirecting();
         }
 
         if ($request->getMethod() === 'POST') {
@@ -114,7 +115,7 @@ final class UserController
                 $this->userRepository->delete($idUser);
                 $this->session->addFlashes('success', 'Vous n\'êtes plus un membre du blog');
                 $this->logoutAction();
-                return $redirecting->redirecting();
+                return $route->redirecting();
             }
         }
         return $route->deleteUser();

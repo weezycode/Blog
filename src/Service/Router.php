@@ -25,18 +25,12 @@ use App\Controller\backoffice\AdminArticleController;
 
 final class Router
 {
-    private PDO $bdd;
     private View $view;
     private Session $session;
-    private $send;
-    private $message;
-    private  $user;
 
 
     public function __construct(private Request $request)
     {
-        // dépendance21
-        // $this->bdd = $database->getPDO();
         $this->database = new Database('localhost', 'root', '', 'blog');
         $this->session = new Session();
         $this->view = new View($this->session);
@@ -46,11 +40,6 @@ final class Router
 
     public function run(): Response
     {
-
-
-
-
-
         //On test si une action a été défini ? si oui alors on récupére l'action : sinon on mets une action par défaut (ici l'action posts)
         $action = $this->request->hasQuery('action') ? $this->request->getQuery('action') : 'home';
 

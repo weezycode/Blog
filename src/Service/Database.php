@@ -19,28 +19,19 @@ final class Database
 
     public function __construct(string $servername, string $username, string $password, string $dbName)
     {
-
-
-
         try {
-
             $this->bdd = new PDO("mysql:host=$servername;dbname=$dbName;charset=utf8", $username, $password);
-            // set the PDO error mode to exception
             $this->bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            //echo "bddected successfully";
         } catch (PDOException $e) {
-            //echo "bddection failed: " . $e->getMessage();
         }
     }
-
-
 
     public function getPDO(): PDO
     {
 
         return $this->bdd;
     }
+
     public function prepare(string $sq): void
     {
         $table = explode('from', $sq);
@@ -64,28 +55,4 @@ final class Database
 
         return $this->bdd[$this->table];
     }
-    /**
-     * @param $sql
-     * @param null $parameters
-     * @param null $binds
-     * @return bool|false|\PDOStatement
-     */
-    protected function sql($sql, $parameters = null)
-    {
-
-        if ($parameters) {
-            $result = $this->getPDO()->prepare($sql);
-
-            $result->execute($parameters);
-
-            return $result;
-        } else {
-            $result = $this->getPDO()->query($sql);
-
-            return $result;
-        }
-    }
-
-
-    /* A retirer - Fin */
 }

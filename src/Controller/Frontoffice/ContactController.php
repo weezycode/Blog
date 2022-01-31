@@ -11,6 +11,7 @@ use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
 use App\Service\FormValidator\ValidForm;
 use App\Controller\Frontoffice\HomeController;
+use App\Service\Route;
 
 final class ContactController
 {
@@ -25,7 +26,7 @@ final class ContactController
 
     public function contactForm()
     {
-        $response = new HomeController($this->view);
+        $response = new Route($this->view);
         if ($this->infoContact === null) {
             $this->session->addFlashes('error', 'Tous les champs doivent être saisis');
             return $response->displayIndex();
@@ -61,6 +62,6 @@ final class ContactController
         }
 
 
-        header('Location: index.php');
+        $response->redirecting();
     }
 }
