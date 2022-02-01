@@ -2,12 +2,20 @@
         <body>
     <header class ="header-admin">
         <h1 class="text-center"> Bienvenue dans l'administration du blog </h1>
-          {% for message in flashes %}
+    </header>
+     <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- Post preview-->
+                <div class="post-preview">
+                    {% for message in flashes %}
                         <div class="alert alert-dark alert-dismissible">
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        <strong class="">{{ message }} </strong> 
-                    </div> {% endfor %}
-    </header>
+                        <strong>{{ message }} </strong> 
+                        </div>{% endfor %}
+                </div>
+            </div>     
+        </div>
 <div class="container mt-3">
             <ul class="nav nav-pills nav-justified">
              {% if session.user.status == 'admin' %}

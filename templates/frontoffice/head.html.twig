@@ -73,7 +73,13 @@
                     <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.php?action=article">Blog</a></li>
                          {% if session.user %}
-                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.php?action=profil">Bonjour,{{ session.user.pseudo }} </a></li>
+                      <div class="dropdown">
+                                <button type="button" class="delete btn-secondary dropdown-toggle" data-bs-toggle="dropdown">Bonjour,{{ session.user.pseudo }} 
+                                </button>
+                                <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="index.php?action=deleteMe">Supprimer mon compte</a></li>
+                                </ul>
+                            </div>
                     <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.php?action=logout">Déconnexion</a></li>
                         {% else %}
                     <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.php?action=login">Se connecter</a></li>
