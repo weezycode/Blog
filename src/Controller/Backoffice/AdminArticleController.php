@@ -17,17 +17,18 @@ use App\Service\Route;
 final class AdminArticleController
 {
     private ?array $infoUser = [];
-    public function __construct(private ArticleRepository $postRepository, private View $view, private Session $session, private Request $request)
+    private Response $response;
+    public function __construct(private ArticleRepository $postRepository, private View $view, private Session $session, private Request $request, private AccessControl $access)
     {
         $this->infoUser = $this->request->getAllRequest();
     }
 
     public function Admin(): Response
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        $response = new response();
+
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
         $isAdmin = $this->session->get('user');
 
@@ -42,35 +43,33 @@ final class AdminArticleController
             ]));
         } else {
 
-            return $redirecting->displayError();
+            return $response->displayError();
         }
     }
 
     public function displayToAddPost(): Response
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        $response = new response();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
         $isAdmin = $this->session->get('user');
 
         if ($isAdmin->getStatus() === 'admin' || $isAdmin->getStatus() === 'superadmin') {
 
-            return $redirecting->addPost();
+            return new Response($this->view->renderAdmin(['template' => 'addPost', 'data' => []]));
         } else {
 
-            return $redirecting->redirecting();
+            return $response->redirecting();
         }
     }
 
     public function addPost()
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
+        $response = new response();
 
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
 
         $isAdmin = $this->session->get('user');
@@ -100,18 +99,24 @@ final class AdminArticleController
                 $this->session->addFlashes('success', "Félicitaion votre post a été ajouté!");
                 return $this->Admin();
             }
-            return $this->Admin();
+            return new Response($this->view->renderAdmin(
+                [
+                    'template' => 'addPost',
+                    'data' => [
+                        'info' => $this->infoUser,
+                    ]
+                ]
+            ));
         }
-        $redirecting->redirecting();
+        $response->redirecting();
     }
 
     public function displayForUpdatePost(int $id): Response
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
+        $response = new response();
 
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
         $isAdmin = $this->session->get('user');
         if ($isAdmin->getStatus() === 'admin' || $isAdmin->getStatus() === 'superadmin') {
@@ -128,17 +133,16 @@ final class AdminArticleController
             }
         }
 
-        return $redirecting->redirecting();
+        return $response->redirecting();
     }
 
 
     public function updatePost()
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
+        $response = new response();
 
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
 
         $isAdmin = $this->session->get('user');
@@ -188,18 +192,26 @@ final class AdminArticleController
                 $this->session->addFlashes('success', "Félicitaion votre post a été modifié!");
                 return $this->Admin();
             }
-            return $this->Admin();
+            $article = $this->postRepository->findOneBy(['id' => $idPost]);
+            return new Response($this->view->renderAdmin(
+                [
+                    'template' => 'displayForUpdatePost',
+                    'data' => [
+                        'post' => $article,
+                        'article' => $this->infoUser,
+                    ],
+                ],
+            ));
         }
     }
 
 
     public function deletePost()
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
+        $response = new response();
 
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
 
         $isAdmin = $this->session->get('user');
@@ -212,17 +224,16 @@ final class AdminArticleController
             $this->session->addFlashes('success', "Félicitaion le post a été supprimé !");
             return $this->Admin();
         } else {
-            $redirecting->redirecting();
+            $response->redirecting();
         }
     }
 
 
     public function displayAllComment(CommentRepository $commentRepository)
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        $response = new response();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
         $isAdmin = $this->session->get('user');
 
@@ -241,16 +252,15 @@ final class AdminArticleController
             ]));
         } else {
 
-            return $redirecting->redirecting();
+            return $response->redirecting();
         }
     }
 
     public function updateCommentStatus(CommentRepository $commentRepository)
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        $response = new response();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
         $isAdmin = $this->session->get('user');
 
@@ -261,16 +271,15 @@ final class AdminArticleController
             return $this->Admin();
         } else {
 
-            return $redirecting->redirecting();
+            return $response->redirecting();
         }
     }
 
     public function deleteComment(CommentRepository $commentRepository)
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        $response = new response();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
         $isAdmin = $this->session->get('user');
 
@@ -281,7 +290,7 @@ final class AdminArticleController
             return $this->Admin();
         } else {
 
-            return $redirecting->redirecting();
+            return $response->redirecting();
         }
     }
 }

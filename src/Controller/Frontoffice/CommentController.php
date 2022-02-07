@@ -6,6 +6,7 @@ namespace  App\Controller\Frontoffice;
 
 use App\View\View;
 use App\Service\Route;
+use App\Service\Token;
 use App\Model\Entity\User;
 use App\Service\Http\Request;
 use App\Service\AccessControl;
@@ -15,13 +16,14 @@ use App\Model\Repository\UserRepository;
 use App\Service\FormValidator\ValidForm;
 use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
-
+use Egulias\EmailValidator\Result\Result;
 
 final class CommentController
 {
     private ?array $infoUser = [];
+    private Response $response;
 
-    public function __construct(private Request $request, private UserRepository $userRepository,  private Session $session,  private CommentRepository $commentRepository, private View $view, private ArticleRepository $postRepository)
+    public function __construct(private Request $request, private UserRepository $userRepository,  private Session $session,  private CommentRepository $commentRepository, private View $view, private ArticleRepository $postRepository, private AccessControl $access)
     {
         $this->infoUser = $this->request->getAllRequest();
     }
@@ -29,45 +31,64 @@ final class CommentController
 
     public function addComment()
     {
-        $redirecting = new Route($this->view);
-        $userConnect = new AccessControl($this->session, $this->view);
+        $response = new Response();
 
-        if ($userConnect->noConnect()) {
-            return $redirecting->redirecting();
+        if ($this->access->noConnect()) {
+            return $response->redirecting();
         }
         $user = $this->session->get('user');
 
         if ($this->infoUser === null) {
             $this->session->addFlashes('warning', "Tous les champs ne sont pas remplis ou corrects.");
-            return $redirecting->redirectingPostcomment();
+            return $response->redirectingPostcomment();
         }
-
+        if ($this->infoUser['token'] !== $this->session->get('token')) {
+            $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
+            return $response->redirecting();
+        }
         $idUser = ValidForm::purifyContent($this->infoUser['id_user']);
         $idPost = ValidForm::purifyContent($this->infoUser['id_article']);
         $content = (ValidForm::purifyAll($this->infoUser['content']));
 
         if (!isset($content)) {
             $this->session->addFlashes('warning', "Vérifiez votre saisis !");
-            return $redirecting->redirectingPostcomment();
         }
 
         $postRepo = $this->postRepository->findOneBy(['id' => $idPost]);
 
         if (!$postRepo->getId()) {
             $this->session->addFlashes('warning', "Ne mofifiez pas l'id du post !");
-            return $redirecting->redirectingPostcomment();
         } else if (!$user->getId()) {
             $this->session->addFlashes('warning', "Ne mofifiez pas votre id !");
-            return $redirecting->redirectingPostcomment();
         } else {
 
             $idUser = $user->getId();
             $idPost = $postRepo->getId();
+            if (!isset($content) || !$postRepo->getId() || !$user->getId()) {
+                $this->session->addFlashes('warning', "Vérifiez votre saisis !");
+
+                $tokenRand = new Token();
+                $token = $tokenRand->getToken();
+                $this->session->set('token', $token);
+                $comments = $this->commentRepository->findByPost($idPost);
+                $response = new Response($this->view->render(
+                    [
+                        'template' => 'post',
+                        'data' => [
+                            'post' => $postRepo,
+                            'comments' => $comments,
+                            'token' => $token,
+                        ],
+                    ],
+                ));
+
+
+                return $response;
+            }
 
             $this->commentRepository->addComment($idUser, $idPost, $content);
             $this->session->addFlashes('success', "Félicitaion votre commentaire sera publié aprés validation");
+            return $response->redirectingPostcomment();
         }
-
-        return $redirecting->redirectingPostcomment();
     }
 }

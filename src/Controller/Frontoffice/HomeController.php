@@ -15,7 +15,7 @@ use App\Service\SendEmail;
 final class HomeController
 {
 
-
+    private Response  $response;
 
     public function __construct(private View $view)
     {
@@ -27,8 +27,7 @@ final class HomeController
     }
     public function displayIndex(): Response
     {
-        $home = new Route($this->view);
 
-        return $home->displayIndex();
+        return new Response($this->view->render(['template' => 'home']));
     }
 }

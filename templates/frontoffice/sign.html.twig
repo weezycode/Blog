@@ -1,29 +1,48 @@
  {% extends "/frontoffice/layout.html.twig" %} 
  {% block title %}Inscription{% endblock %}
  {% block content %} 
-<div class="login">
-  {% for message in flashes %}
-                        <div class="alert alert-red alert-dismissible">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- Post preview-->
+                <div class="post-preview">
+                
+                         {% for label, message in flashes  %}
+
+                        <div class="alert alert-dark alert{{ label }}  alert-dismissible ">
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        <strong class="danger">{{ message }} </strong> 
-                    </div> {% endfor %}
-    <form  method="POST">
+                        <strong>{{ message }} </strong> 
+                        </div>{% endfor %}
+                    {% for messages in message %}
+                        <div class="alert alert-dark alert-dismissible">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong>{{ messages }} </strong> 
+                        </div>{% endfor %}
+                </div>    
+            </div>
+        </div>
+    </div>
+<div class="login">
+
+    <form method="POST">
         <h2 class="text-center">S'inscrire</h2>       
         <div class="form-group">      
-            <label for="email">Pseudo</label>
-            <input type="text" name="pseudo" class="form-control formeControl" placeholder="Pseudo" value="{{ _post.pseudo }}" required="required">
+            <label for="email">Pseudo <em class= "danger"> *</em></label>
+            <input type="text" name="pseudo" class="form-control formeControl" placeholder="Pseudo"  required="required" value="{{ infoUser.pseudo }}">
         </div>
         <div class="form-group">
-        <label for="email">Email</label>
-            <input type="email" name="email"class="form-control formeControl" placeholder="Email" value="{{ _post.email }}" required="required">
+        <label for="email">Email <em class= "danger"> *</em></label>
+            <input type="email" name="email"class="form-control formeControl" placeholder="Email"  required="required" value="{{  infoUser.email }}">
         </div>
         <div class="form-group">
-        <label for="email">Mot de passe</label>
+        <label for="email">Mot de passe <em class= "danger"> *</em></label>
             <input type="password" name="password" class="form-control formeControl" placeholder="Mot de  passe" required="required">
         </div>
+         <input type="hidden" name="token" value="{{ session.token }}"/>             
                 <div class="form-group">
-                <label for="email">Confimer votre mot de passe</label>
+                <label for="email">Confimer votre mot de passe <em class= "danger"> *</em></label>
             <input type="password" name="password_confimed" class="form-control formeControl" placeholder="Confirmation de mot de passe" required="required">
+            <em class= "danger">Pour le mot de passe veuillez saisir au moins 6 caractères, un chiffre, une lettre majuscule et miniscule *</em>
         </div>
         <div class="form-group text-center">
             <button type="submit" class="button btn-primary btn-block">Valider</button>
@@ -35,4 +54,9 @@
     </form>
     
 </div>
-{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>   
+       {% endblock %}

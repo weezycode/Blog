@@ -15,18 +15,17 @@ use App\Controller\Frontoffice\Error404Controller;
 
 final class AdminUserController
 {
-
-    public function __construct(private Request $request, private UserRepository $userRepository, private View $view, private Session $session)
+    private Response $response;
+    public function __construct(private Request $request, private UserRepository $userRepository, private View $view, private Session $session, private AccessControl $access)
     {
         $this->infoUser = $this->request->getAllRequest();
     }
 
     public function displayAllUser()
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        $response = new response();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
         $isAdmin = $this->session->get('user');
 
@@ -40,16 +39,15 @@ final class AdminUserController
 
             ]));
         } else {
-            return $redirecting->redirecting();
+            return $response->redirecting();
         }
     }
 
     public function displayAllUserSupra()
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $redirecting = new Route($this->view);
-        if (!$isUser->isAdmin()) {
-            $redirecting->redirecting();
+        $response = new response();
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
         $isAdmin = $this->session->get('user');
 
@@ -64,16 +62,15 @@ final class AdminUserController
             ]));
         } else {
 
-            return $redirecting->redirecting();
+            return $response->redirecting();
         }
     }
     public function AdmindeleteUser(Request $request)
     {
-        $userConnect = new AccessControl($this->session, $this->view);
-        $route = new Route($this->view);
 
-        if ($userConnect->noConnect()) {
-            return $route->redirecting();
+        $response = new response();
+        if ($this->access->noConnect()) {
+            return $response->redirecting();
         }
 
         if ($request->getMethod() === 'POST') {
@@ -84,22 +81,22 @@ final class AdminUserController
                 $this->userRepository->delete($idUser);
                 $this->session->addFlashes('success', 'Le membre a été supprimé !');
                 if ($isAdmin->getStatus() === 'admin') {
-                    return $route->userList();
+                    return $response->userList();
                 }
                 if ($isAdmin->getStatus() === 'superadmin') {
-                    return $route->userListSuperAdmin();
+                    return $response->userListSuperAdmin();
                 }
             }
         }
-        return $route->userList();
+        return $response->userList();
     }
 
     public function updateUser(Request $request)
     {
-        $isUser = new AccessControl($this->session, $this->view);
-        $route = new Route($this->view);
-        if (!$isUser->isAdmin()) {
-            $route->redirecting();
+        $response = new response();
+
+        if (!$this->access->isAdmin()) {
+            $response->redirecting();
         }
 
         $isAdmin = $this->session->get('user');
@@ -110,16 +107,16 @@ final class AdminUserController
                 $status = "admin";
                 $this->userRepository->updateStatusUser($userToAdmin, $status);
                 $this->session->addFlashes('success', "L'utilisateur est devenu Admin !");
-                return $route->userListSuperAdmin();
+                return $response->userListSuperAdmin();
             } elseif ($request->getRequest("changeToMember")) {
                 $userToMember = $request->getRequest('changeToMember');
                 $status = "member";
                 $this->userRepository->updateStatusUser($userToMember, $status);
                 $this->session->addFlashes('success', "L'utilisateur est devenu membre !");
-                return $route->userListSuperAdmin();
+                return $response->userListSuperAdmin();
             }
-            return $route->userListSuperAdmin();
+            return $response->userListSuperAdmin();
         }
-        return $route->redirecting();
+        return $response->redirecting();
     }
 }
