@@ -46,7 +46,7 @@ final class ArticleRepository
     {
 
 
-        $req = $this->bdd->prepare('SELECT * FROM article ORDER BY date_up DESC ');
+        $req = $this->bdd->prepare('SELECT * FROM article ORDER BY date_created DESC  ');
         $req->execute();
         if ($req === null) {
             return null;

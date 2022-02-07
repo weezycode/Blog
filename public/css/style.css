@@ -21,6 +21,10 @@ body{
 .login h2 {
     margin: 0 0 15px;
 }
+.date_comment{
+    font-size: 14px;
+
+}
 .formeControl, .button {
     min-height: 38px;
     border-radius: 2px;
@@ -49,3 +53,4 @@ body{
     font-weight: bold;
     text-transform: uppercase;
 }
+

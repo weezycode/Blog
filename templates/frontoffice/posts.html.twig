@@ -7,7 +7,7 @@
     <header class="py-5 bg-light border-bottom mb-4">
         <div class="container">
             <div class="text-center my-5">
-                <h1 class="fw-bolder">Tous les blogs posts</h1>
+                <h1 class="fw-bolder">Tous les articles</h1>
             </div>
         </div>
     </header>
@@ -23,10 +23,10 @@
                             <a href="index.php?action=articledetails&id={{ post.id}}"><img class="card-img-top" style="height :300px;"
                                     src="images/MOUDOU-logo.png" alt="..." /></a>
                             <div class="cardbody"> 
-                                {% if post.dateCreated <= post.dateUp %}
-                                 <em>dernière mise à jour le {{post.dateUp | date("d/M/Y", "Europe/Paris") }} à {{post.dateUp | date('H:i', "Europe/Paris") }} </em>
+                                {% if post.dateCreated < post.dateUp %}
+                                 <em>dernière mise à jour le {{post.dateUp | date("d/m/Y", "Europe/Paris") }} à {{post.dateUp | date('H:i', "Europe/Paris") }} </em>
                                  {% else %}
-                                  <em>Publié le {{post.dateCreated | date("d/M/Y", "Europe/Paris")}} à {{post.dateCreated | date('H:i', "Europe/Paris") }}</em> 
+                                  <em>Publié le {{post.dateCreated | date("d/m/Y", "Europe/Paris")}} à {{post.dateCreated | date('H:i', "Europe/Paris") }}</em> 
                                   {% endif %}
                                 <h3 class="card-title h4 text-truncate" >{{ post.title}}</h3>
                                 <p class="card-text  text-truncate">{{ post.shortContent}}</p>

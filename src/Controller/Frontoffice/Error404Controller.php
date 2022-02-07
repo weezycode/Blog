@@ -11,18 +11,16 @@ use App\Service\Http\Response;
 
 final class Error404Controller
 {
-    /**
-     * @Route("/message", name="message", methods="POST")
-     */
 
+    private Response  $response;
     public function __construct(private View $view)
     {
         //$this->mailer = $mailer;
     }
     public function displayError()
     {
-        $redirecting = new Route($this->view);
+        $response = new Response();
 
-        return $redirecting->displayError();
+        return new Response($this->view->render(['template' => 'error/404']));
     }
 }
