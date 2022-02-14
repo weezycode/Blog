@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace  App\Controller\backoffice;
 
 use App\View\View;
+use App\Service\Route;
+use App\Service\Token;
 use App\Service\Http\Request;
 use App\Service\AccessControl;
 use App\Service\Http\Response;
@@ -12,7 +14,6 @@ use App\Service\Http\Session\Session;
 use App\Service\FormValidator\ValidForm;
 use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
-use App\Service\Route;
 
 final class AdminArticleController
 {
@@ -43,7 +44,7 @@ final class AdminArticleController
             ]));
         } else {
 
-            return $response->displayError();
+            $response->redirectTo("index.php");
         }
     }
 
@@ -51,7 +52,7 @@ final class AdminArticleController
     {
         $response = new response();
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
         $isAdmin = $this->session->get('user');
 
@@ -60,7 +61,7 @@ final class AdminArticleController
             return new Response($this->view->renderAdmin(['template' => 'addPost', 'data' => []]));
         } else {
 
-            return $response->redirecting();
+            $response->redirectTo("index.php");
         }
     }
 
@@ -69,7 +70,7 @@ final class AdminArticleController
         $response = new response();
 
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
 
         $isAdmin = $this->session->get('user');
@@ -79,6 +80,13 @@ final class AdminArticleController
             if ($this->infoUser === null) {
                 $this->session->addFlashes('warning', "Tous les champs ne sont pas remplis ou corrects.");
                 return $this->Admin();
+            }
+            $tokenRand = new Token($this->session, $this->request);
+            $token = $tokenRand->getToken();
+
+            if (!$tokenRand->isToken()) {
+                $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
+                return $response->redirectTo("index.php");
             }
             $title = ValidForm::purifyAll($this->infoUser['title']);
             $shortContent = ValidForm::purifyAll($this->infoUser['short_content']);
@@ -108,7 +116,7 @@ final class AdminArticleController
                 ]
             ));
         }
-        $response->redirecting();
+        $response->redirectTo("index.php");
     }
 
     public function displayForUpdatePost(int $id): Response
@@ -116,7 +124,7 @@ final class AdminArticleController
         $response = new response();
 
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
         $isAdmin = $this->session->get('user');
         if ($isAdmin->getStatus() === 'admin' || $isAdmin->getStatus() === 'superadmin') {
@@ -133,7 +141,7 @@ final class AdminArticleController
             }
         }
 
-        return $response->redirecting();
+        $response->redirectTo("index.php");
     }
 
 
@@ -142,7 +150,7 @@ final class AdminArticleController
         $response = new response();
 
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
 
         $isAdmin = $this->session->get('user');
@@ -162,16 +170,12 @@ final class AdminArticleController
 
             if (!isset($idPost)) {
                 $this->session->addFlashes('warning', "L'ID de l'article n'existe pas.");
-                return $this->Admin();
             } elseif (!isset($title)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ titre, mettez que tu texte !.");
-                return $this->Admin();
             } elseif (!isset($shortContent)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ châpo, mettez que tu texte.");
-                return $this->Admin();
             } elseif (!isset($content)) {
                 $this->session->addFlashes('warning', "Veuillez vérifier le champ du post, mettez que tu texte.");
-                return $this->Admin();
             } else {
 
                 if (!$isAdmin->getId()) {
@@ -185,7 +189,6 @@ final class AdminArticleController
 
                 if (!$postRepo->getId()) {
                     $this->session->addFlashes('warning', "Attention n'essayez pas de modifier l'id du post");
-                    return $this->Admin();
                 }
 
                 $this->postRepository->updatePost($idPost, $idUser, $title, $shortContent, $content);
@@ -211,7 +214,7 @@ final class AdminArticleController
         $response = new response();
 
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
 
         $isAdmin = $this->session->get('user');
@@ -224,7 +227,7 @@ final class AdminArticleController
             $this->session->addFlashes('success', "Félicitaion le post a été supprimé !");
             return $this->Admin();
         } else {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
     }
 
@@ -233,7 +236,7 @@ final class AdminArticleController
     {
         $response = new response();
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
         $isAdmin = $this->session->get('user');
 
@@ -252,7 +255,7 @@ final class AdminArticleController
             ]));
         } else {
 
-            return $response->redirecting();
+            $response->redirectTo("index.php");
         }
     }
 
@@ -260,7 +263,7 @@ final class AdminArticleController
     {
         $response = new response();
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
         $isAdmin = $this->session->get('user');
 
@@ -268,10 +271,10 @@ final class AdminArticleController
             $id = ValidForm::purifyContent($this->infoUser['idComment']);
             $commentRepository->updateComment($id);
             $this->session->addFlashes('success', "Le commentaire est maintenant en ligne !");
-            return $this->Admin();
+            $response->redirectTo("index.php?action=listComment");
         } else {
 
-            return $response->redirecting();
+            $response->redirectTo("index.php");
         }
     }
 
@@ -279,7 +282,7 @@ final class AdminArticleController
     {
         $response = new response();
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
         $isAdmin = $this->session->get('user');
 
@@ -287,10 +290,9 @@ final class AdminArticleController
             $id = ValidForm::purifyContent($this->infoUser['idComment']);
             $commentRepository->deleteComment($id);
             $this->session->addFlashes('success', "Le commentaire a été supprimé !");
-            return $this->Admin();
+            $response->redirectTo("index.php?action=listComment");
         } else {
-
-            return $response->redirecting();
+            $response->redirectTo("index.php");
         }
     }
 }

@@ -25,8 +25,9 @@ final class AdminUserController
     {
         $response = new response();
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
+
         $isAdmin = $this->session->get('user');
 
         if ($isAdmin->getStatus() === 'admin' || $isAdmin->getStatus() === 'superadmin') {
@@ -39,7 +40,7 @@ final class AdminUserController
 
             ]));
         } else {
-            return $response->redirecting();
+            $response->redirectTo("index.php");
         }
     }
 
@@ -47,7 +48,7 @@ final class AdminUserController
     {
         $response = new response();
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
         $isAdmin = $this->session->get('user');
 
@@ -70,7 +71,7 @@ final class AdminUserController
 
         $response = new response();
         if ($this->access->noConnect()) {
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
 
         if ($request->getMethod() === 'POST') {
@@ -81,14 +82,14 @@ final class AdminUserController
                 $this->userRepository->delete($idUser);
                 $this->session->addFlashes('success', 'Le membre a été supprimé !');
                 if ($isAdmin->getStatus() === 'admin') {
-                    return $response->userList();
+                    return $response->redirectTo("index.php?action=displayAllUser");
                 }
                 if ($isAdmin->getStatus() === 'superadmin') {
-                    return $response->userListSuperAdmin();
+                    return $response->redirectTo("index.php?action=superAdminPage");
                 }
             }
         }
-        return $response->userList();
+        return $response->redirectTo("index.php?action=displayAllUser");
     }
 
     public function updateUser(Request $request)
@@ -96,7 +97,7 @@ final class AdminUserController
         $response = new response();
 
         if (!$this->access->isAdmin()) {
-            $response->redirecting();
+            $response->redirectTo("index.php");
         }
 
         $isAdmin = $this->session->get('user');
@@ -107,16 +108,16 @@ final class AdminUserController
                 $status = "admin";
                 $this->userRepository->updateStatusUser($userToAdmin, $status);
                 $this->session->addFlashes('success', "L'utilisateur est devenu Admin !");
-                return $response->userListSuperAdmin();
+                return $response->redirectTo("index.php?action=superAdminPage");
             } elseif ($request->getRequest("changeToMember")) {
                 $userToMember = $request->getRequest('changeToMember');
                 $status = "member";
                 $this->userRepository->updateStatusUser($userToMember, $status);
                 $this->session->addFlashes('success', "L'utilisateur est devenu membre !");
-                return $response->userListSuperAdmin();
+                return $response->redirectTo("index.php?action=superAdminPage");
             }
-            return $response->userListSuperAdmin();
+            return $response->redirectTo("index.php?action=superAdminPage");
         }
-        return $response->redirecting();
+        return $response->redirectTo("index.php");
     }
 }

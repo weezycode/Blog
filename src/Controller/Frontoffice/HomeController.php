@@ -19,11 +19,6 @@ final class HomeController
 
     public function __construct(private View $view)
     {
-
-        //$this->infoContact = $this->request->getAllRequest();
-        //$this->session = 
-
-        //$this->mailer = $mailer;
     }
     public function displayIndex(): Response
     {

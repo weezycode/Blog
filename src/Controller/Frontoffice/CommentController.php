@@ -16,7 +16,6 @@ use App\Model\Repository\UserRepository;
 use App\Service\FormValidator\ValidForm;
 use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
-use Egulias\EmailValidator\Result\Result;
 
 final class CommentController
 {
@@ -34,17 +33,21 @@ final class CommentController
         $response = new Response();
 
         if ($this->access->noConnect()) {
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
+
         $user = $this->session->get('user');
 
         if ($this->infoUser === null) {
             $this->session->addFlashes('warning', "Tous les champs ne sont pas remplis ou corrects.");
-            return $response->redirectingPostcomment();
+            return $response->redirectTo("index.php?action=article");
         }
-        if ($this->infoUser['token'] !== $this->session->get('token')) {
+        $tokenRand = new Token($this->session, $this->request);
+        $token = $tokenRand->getToken();
+
+        if (!$tokenRand->isToken()) {
             $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
         $idUser = ValidForm::purifyContent($this->infoUser['id_user']);
         $idPost = ValidForm::purifyContent($this->infoUser['id_article']);
@@ -67,9 +70,6 @@ final class CommentController
             if (!isset($content) || !$postRepo->getId() || !$user->getId()) {
                 $this->session->addFlashes('warning', "Vérifiez votre saisis !");
 
-                $tokenRand = new Token();
-                $token = $tokenRand->getToken();
-                $this->session->set('token', $token);
                 $comments = $this->commentRepository->findByPost($idPost);
                 $response = new Response($this->view->render(
                     [
@@ -88,7 +88,7 @@ final class CommentController
 
             $this->commentRepository->addComment($idUser, $idPost, $content);
             $this->session->addFlashes('success', "Félicitaion votre commentaire sera publié aprés validation");
-            return $response->redirectingPostcomment();
+            return $response->redirectTo("index.php?action=article");
         }
     }
 }

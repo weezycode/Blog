@@ -34,25 +34,27 @@ final class UserController
 
         $response = new Response();
         if ($this->access->isUser()) {
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
 
-
+        $tokenRand = new Token($this->session, $request);
+        $token = $tokenRand->getToken();
+        var_dump($token);
+        die;
 
         $loginFormValidator = new LoginFormValidator($request, $this->userRepository, $this->session);
 
         if ($request->getMethod() === 'POST') {
-            if ($request->getRequest('token') !== $this->session->get('token')) {
+
+            if (!$tokenRand->isToken()) {
                 $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
-                return $response->redirecting();
+                return $response->redirectTo("index.php");
             }
             if ($loginFormValidator->isValid()) {
-                return $response->redirecting();
+                return $response->redirectTo("index.php");
             }
         }
-        $tokenRand = new Token();
-        $token = $tokenRand->getToken();
-        $this->session->set('token', $token);
+
 
 
         $response = new Response($this->view->render(
@@ -70,7 +72,6 @@ final class UserController
     }
 
 
-
     public function signUpAction(): Response
     {
 
@@ -78,21 +79,24 @@ final class UserController
         $response = new Response();
 
         if ($this->access->isUser()) {
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
-        $this->sendEmail = new SendEmail($this->view);
 
+        $tokenRand = new Token($this->session, $this->request);
+        $token = $tokenRand->getToken();
+        $this->sendEmail = new SendEmail($this->view);
         $signupFormValid = new SignupFormValidator($this->request, $this->userRepository, $this->session);
 
         if ($this->infoUser === null) {
             $this->session->addFlashes('error', 'Tous les champs doivent être saisis');
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
         if ($this->request->getMethod() === 'POST') {
-            if ($this->infoUser['token'] !== $this->session->get('token')) {
+            if (!$tokenRand->isToken()) {
                 $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
-                return $response->redirecting();
+                return $response->redirectTo("index.php");
             }
+
             $verify = new ValidForm();
 
             $pseudo = $this->infoUser['pseudo'];
@@ -100,31 +104,15 @@ final class UserController
             $password = $this->infoUser['password'];
             $passwordConfirmed = $this->infoUser['password_confimed'];
 
-            if (!ValidForm::purifyMe($password) || !ValidForm::purifyMe($passwordConfirmed)) {
-                $error[] = 'Veuillez saisir au moins 6 caratères sans espaces pour vos mots de passe!';
-            }
-            // if (!ValidForm::purifyMe($passwordConfirmed)) {
-            //     $error[] = 'Veuillez saisir au moins 6 caratères sans espaces pour le deuxième champ du mot de passe !';
-            // }
             if ($password !== $passwordConfirmed) {
                 $error[] = 'Veuillez saisir le même mot de passe !';
             } else {
                 $password = $passwordConfirmed;
             }
 
-            if (!$verify->is_uppercase($password) || !$verify->is_lowercase($password) || !$verify->is_number($password) || !$verify->is_carak($password)) {
-                $error[] =  'Veuillez saisir au moins une lettre Majuscule, minuscule,un chiffre et un caractère spécial pour votre mot de passe';
+            if (!ValidForm::purifyMe($password) || !ValidForm::purifyMe($passwordConfirmed) || !$verify->is_carak($password) || !$verify->is_uppercase($password) || !$verify->is_lowercase($password) || !$verify->is_number($password)) {
+                $error[] =  'Veuillez saisir au moins au moins 6 caratères sans espaces, une lettre Majuscule, minuscule,un chiffre et un caractère espécial pour votre mot de passe';
             }
-            // if (!$verify->is_lowercase($password)) {
-            //     $error[] = 'Veuillez saisir au moins une lettre minuscule  pour votre mot de passe';
-            // }
-            // if (!$verify->is_number($password)) {
-            //     $error[] = 'Veuillez saisir au moins un chiffre pour votre mot de passe';
-            // }
-            // if (!$verify->is_carak($password)) {
-            //     $error[] =  'Veuillez saisir au moins un caractère spécial pour votre mot de passe';
-            // }
-
 
             // check entrée pseudo
             if (!ValidForm::purifyContent($pseudo)) {
@@ -155,16 +143,12 @@ final class UserController
                         $this->session->set('user', $newUser);
                         $this->session->addFlashes('success', 'Félicitation vous êtes maintenant un membre et vous allez recevoir un email de confirmation!');
 
-                        return $response->redirecting();
+                        return $response->redirectTo("index.php");
                     }
                 }
             }
         }
 
-
-        $tokenRand = new Token();
-        $token = $tokenRand->getToken();
-        $this->session->set('token', $token);
 
         $response = new Response($this->view->render(
             [
@@ -187,17 +171,17 @@ final class UserController
     {
         $response = new Response();
         if ($this->access->noConnect()) {
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
         $this->session->remove('user');
-        return $response->redirecting();
+        return $response->redirectTo("index.php");
     }
 
     public function deleteUser(Request $request)
     {
         $response = new Response();
         if ($this->access->noConnect()) {
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
 
         if ($request->getMethod() === 'POST') {
@@ -208,7 +192,7 @@ final class UserController
                 $this->userRepository->delete($idUser);
                 $this->session->addFlashes('success', 'Vous n\'êtes plus un membre du blog');
                 $this->logoutAction();
-                return $response->redirecting();
+                return $response->redirectTo("index.php");
             }
         }
         return new Response($this->view->render(['template' => 'deleteUser', 'data' => []]));

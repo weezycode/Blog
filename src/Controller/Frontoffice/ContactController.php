@@ -30,17 +30,20 @@ final class ContactController
         $response = new Response();
         if ($this->infoContact === null) {
             $this->session->addFlashes('error', 'Tous les champs doivent être saisis');
-            return $response->displayIndex();
+            return $response->redirectTo("index.php");
         }
-        if ($this->infoContact['token'] !== $this->session->get('token')) {
+        $tokenRand = new Token($this->session, $this->request);
+        $token = $tokenRand->getToken();
+
+        if (!$tokenRand->isToken()) {
             $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
         $this->sendEmail = new SendEmail($this->view);
         $name = ValidForm::is_alphAll($this->infoContact['nom']);
         $lname = ValidForm::is_alphAll($this->infoContact['prenom']);
         $message = ValidForm::is_alpha($this->infoContact['message']);
-        $email = ValidForm::purifyContent($this->infoContact['email']);
+        $email = ValidForm::is_email($this->infoContact['email']);
 
 
 
@@ -53,9 +56,10 @@ final class ContactController
         if (!isset($message)) {
             $error[] = "Le champ  message n'est pas correct ou ne doit pas être vide.";
         }
-        if (!ValidForm::is_email($email)) {
+        if (!isset($email)) {
             $error[] = "Le champ  email n'est pas correct.";
         }
+
         if (isset($name) and isset($lname) and isset($email) and isset($message)) {
             $name = $this->infoContact['nom'];
             $lname = $this->infoContact['prenom'];
@@ -66,11 +70,9 @@ final class ContactController
 
             $this->sendEmail->SendEmail($name, $lname, $email, $message);
             $this->session->addFlashes('success', "Votre message a bien été envoyé.");
-            return $response->redirecting();
+            return $response->redirectTo("index.php");
         }
-        $tokenRand = new Token();
-        $token = $tokenRand->getToken();
-        $this->session->set('token', $token);
+
         $response = new Response($this->view->render(
             [
                 'template' => 'home',
