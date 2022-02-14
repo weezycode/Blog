@@ -39,14 +39,13 @@ final class UserController
 
         $tokenRand = new Token($this->session, $request);
         $token = $tokenRand->getToken();
-        var_dump($token);
-        die;
+
 
         $loginFormValidator = new LoginFormValidator($request, $this->userRepository, $this->session);
 
         if ($request->getMethod() === 'POST') {
 
-            if (!$tokenRand->isToken()) {
+            if ($tokenRand->isToken()) {
                 $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
                 return $response->redirectTo("index.php");
             }
