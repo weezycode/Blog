@@ -45,7 +45,7 @@ final class UserController
 
         if ($request->getMethod() === 'POST') {
 
-            if ($tokenRand->isToken()) {
+            if (!$tokenRand->isToken()) {
                 $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
                 return $response->redirectTo("index.php");
             }
