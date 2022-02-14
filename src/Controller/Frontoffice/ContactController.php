@@ -34,6 +34,8 @@ final class ContactController
         }
         $tokenRand = new Token($this->session, $this->request);
         $token = $tokenRand->getToken();
+        var_dump($this->session);
+        die;
 
         if (!$tokenRand->isToken()) {
             $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');

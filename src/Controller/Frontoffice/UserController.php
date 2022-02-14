@@ -91,7 +91,7 @@ final class UserController
             return $response->redirectTo("index.php");
         }
         if ($this->request->getMethod() === 'POST') {
-            if (!$tokenRand->isToken()) {
+            if ($tokenRand->isToken() === false) {
                 $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
                 return $response->redirectTo("index.php");
             }

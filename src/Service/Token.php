@@ -12,6 +12,7 @@ final class Token
     private ?array $infoToken = [];
     public function __construct(private Session $session, private Request $request)
     {
+
         $this->infoToken = $this->request->getAllRequest();
     }
 
@@ -23,15 +24,16 @@ final class Token
 
     public function setToken()
     {
+
         $this->session->set('user', $this->getToken());
     }
 
     public function isToken(): bool
     {
 
+
         if ($this->session->get('token') !== $this->infoToken['token']) {
             return false;
         }
-        return true;
     }
 }
