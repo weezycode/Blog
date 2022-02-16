@@ -18,13 +18,13 @@ final class ArticleController
 
     public function displayOneAction(int $id, CommentRepository $commentRepository): Response
     {
-        $response = new Error404Controller($this->view);
+        $response = new Response();
 
         $article = $this->postRepository->findOneBy(['id' => $id]);
 
         if ($article !== null) {
             $comments = $commentRepository->findByPost($id);
-            $response = new Response($this->view->render(
+            return new Response($this->view->render(
                 [
                     'template' => 'post',
                     'data' => [
@@ -33,22 +33,28 @@ final class ArticleController
                     ],
                 ],
             ));
-        }
+        } else {
 
-        return $response;
+            return $response->redirectTo("index.php");
+        }
     }
 
     public function displayAllAction(): Response
     {
 
-
+        $response = new Response();
         $posts = $this->postRepository->findAll();
 
+        if ($posts === null) {
+            return $response->redirectTo("index.php");
+        } else {
 
-        return new Response($this->view->render([
-            'template' => 'posts',
-            'data' => ['posts' => $posts],
 
-        ]));
+            return new Response($this->view->render([
+                'template' => 'posts',
+                'data' => ['posts' => $posts],
+
+            ]));
+        }
     }
 }

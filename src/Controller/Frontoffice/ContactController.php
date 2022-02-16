@@ -17,7 +17,7 @@ final class ContactController
 {
     private $sendEmail;
     private ?array $infoContact = [];
-    private $error;
+
     private Response  $response;
 
     public function __construct(private Request $request, private View $view, private Session $session)
@@ -32,47 +32,48 @@ final class ContactController
             $this->session->addFlashes('error', 'Tous les champs doivent être saisis');
             return $response->redirectTo("index.php");
         }
+
         $tokenRand = new Token($this->session, $this->request);
-        $token = $tokenRand->getToken();
-        var_dump($this->session);
-        die;
+
+
 
         if (!$tokenRand->isToken()) {
             $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
             return $response->redirectTo("index.php");
-        }
-        $this->sendEmail = new SendEmail($this->view);
-        $name = ValidForm::is_alphAll($this->infoContact['nom']);
-        $lname = ValidForm::is_alphAll($this->infoContact['prenom']);
-        $message = ValidForm::is_alpha($this->infoContact['message']);
-        $email = ValidForm::is_email($this->infoContact['email']);
+        } else {
+
+            $this->sendEmail = new SendEmail($this->view);
+            $name = ValidForm::is_alphAll($this->infoContact['nom']);
+            $lname = ValidForm::is_alphAll($this->infoContact['prenom']);
+            $message = ValidForm::is_alpha($this->infoContact['message']);
+            $email = ValidForm::is_email($this->infoContact['email']);
 
 
 
-        if (!isset($name)) {
-            $error[] = "Le champ  nom n'est pas correct.";
-        }
-        if (!isset($lname)) {
-            $error[] = "Le champ  prénom n'est pas correct.";
-        }
-        if (!isset($message)) {
-            $error[] = "Le champ  message n'est pas correct ou ne doit pas être vide.";
-        }
-        if (!isset($email)) {
-            $error[] = "Le champ  email n'est pas correct.";
-        }
+            if (!isset($name)) {
+                $error[] = "Le champ  nom n'est pas correct.";
+            }
+            if (!isset($lname)) {
+                $error[] = "Le champ  prénom n'est pas correct.";
+            }
+            if (!isset($message)) {
+                $error[] = "Le champ  message n'est pas correct ou ne doit pas être vide.";
+            }
+            if (!isset($email)) {
+                $error[] = "Le champ  email n'est pas correct.";
+            }
 
-        if (isset($name) and isset($lname) and isset($email) and isset($message)) {
-            $name = $this->infoContact['nom'];
-            $lname = $this->infoContact['prenom'];
-            $message = $this->infoContact['message'];
-            $email = $this->infoContact['email'];
+            if (isset($name) and isset($lname) and isset($email) and isset($message)) {
 
+                $name = $this->infoContact['nom'];
+                $lname = $this->infoContact['prenom'];
+                $message = $this->infoContact['message'];
+                $email = $this->infoContact['email'];
 
-
-            $this->sendEmail->SendEmail($name, $lname, $email, $message);
-            $this->session->addFlashes('success', "Votre message a bien été envoyé.");
-            return $response->redirectTo("index.php");
+                $this->sendEmail->SendEmail($name, $lname, $email, $message);
+                $this->session->addFlashes('success', "Votre message a bien été envoyé.");
+                return $response->redirectTo("index.php");
+            }
         }
 
         $response = new Response($this->view->render(
@@ -81,7 +82,6 @@ final class ContactController
                 'data' => [
                     'infoContact' => $this->infoContact,
                     'message' => $error,
-                    'token' => $token,
                 ],
             ],
         ));
