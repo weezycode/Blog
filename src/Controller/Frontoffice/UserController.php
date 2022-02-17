@@ -21,7 +21,6 @@ final class UserController
 {
 
     private $sendEmail;
-    private $tok;
     private ?array $infoUser = [];
     public function __construct(private Request $request, private UserRepository $userRepository, private View $view, private Session $session, private AccessControl $access)
     {
@@ -38,8 +37,6 @@ final class UserController
         }
 
         $tokenRand = new Token($this->session, $request);
-        $token = $tokenRand->getToken();
-
 
         $loginFormValidator = new LoginFormValidator($request, $this->userRepository, $this->session);
 
@@ -55,13 +52,13 @@ final class UserController
         }
 
 
-
+        $tokenRand->genToken();
         $response = new Response($this->view->render(
             [
                 'template' => 'login',
                 'data' => [
                     'email' => $request->getRequest('email'),
-                    'token' => $token,
+                    'token' => $tokenRand->getToken(),
 
                 ],
             ],
@@ -82,7 +79,7 @@ final class UserController
         }
 
         $tokenRand = new Token($this->session, $this->request);
-        $token = $tokenRand->getToken();
+
         $this->sendEmail = new SendEmail($this->view);
         $signupFormValid = new SignupFormValidator($this->request, $this->userRepository, $this->session);
 
@@ -91,7 +88,7 @@ final class UserController
             return $response->redirectTo("index.php");
         }
         if ($this->request->getMethod() === 'POST') {
-            if ($tokenRand->isToken() === false) {
+            if (!$tokenRand->isToken()) {
                 $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
                 return $response->redirectTo("index.php");
             }
@@ -148,13 +145,13 @@ final class UserController
             }
         }
 
-
+        $tokenRand->genToken();
         $response = new Response($this->view->render(
             [
                 'template' => 'sign',
                 'data' => [
                     'infoUser' => $this->infoUser,
-                    'token' => $token,
+                    'token' => $tokenRand->getToken(),
                     'message' => $error,
 
                 ],

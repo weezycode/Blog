@@ -51,7 +51,7 @@ final class Router
 
         // *** @Route http://localhost:8000/***
         if ($action === 'home') {
-            $controller = new HomeController($this->view);
+            $controller = new HomeController($this->view, $this->session, $this->request);
 
             return $controller->displayIndex();
         } elseif ($action === 'contact') {

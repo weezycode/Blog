@@ -35,8 +35,7 @@ final class ArticleRepository
         foreach ($pseudo as $value) {
         }
         if ($data['id'] === null) {
-            $route = new Response();
-            return $route->redirectingLost();
+            return null;
         }
         return $data === null ? $data :
             new Article((int)$data['id'], (int)$data['id_author'], (string)$data['title'], (string)$data['short_content'], (string)$data['pseudo'] = $value, (string)$data['content'], $data['date_created'], $data['date_up']);
@@ -63,8 +62,7 @@ final class ArticleRepository
             foreach ($pseudos as $pseudo) {
             }
             if ($post['id'] === null) {
-                $route = new Response();
-                return $route->redirectingLost();
+                return null;
             }
 
             $articles[] = new Article((int)$post['id'], (int)$post['id_author'], $post['title'], $post['short_content'], $post['pseudo'] = $pseudo, $post['content'], $post['date_created'], $post['date_up']);
