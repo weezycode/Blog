@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <input type="hidden" value="{{ post.id}}"  name="id_article"/>
                         <input type="hidden" value="{{session.user.id}}"  name="id_user"/> 
-                          <input type="hidden" name="token" value="{{ session.token }}"/> 
+                          <input type="hidden" name="token" value="{{ token }}"/> 
                     <div class="d-flex flex-row align-items-start">@{{ session.user.pseudo }}
                     <textarea name="content" id="w3review" rows="4" cols="0"  class="form-control ml-1 shadow-none textarea"></textarea></div>   
                     <div class="mt-2 text-right"><button class="btn btn-primary btn-sm shadow-none" type="submit">Poster votre commentaire</button>

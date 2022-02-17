@@ -43,7 +43,7 @@ final class CommentController
             return $response->redirectTo("index.php?action=article");
         }
         $tokenRand = new Token($this->session, $this->request);
-        $token = $tokenRand->getToken();
+
 
         if (!$tokenRand->isToken()) {
             $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
@@ -68,8 +68,7 @@ final class CommentController
             $idUser = $user->getId();
             $idPost = $postRepo->getId();
             if (!isset($content) || !$postRepo->getId() || !$user->getId()) {
-                $this->session->addFlashes('warning', "Vérifiez votre saisis !");
-
+                $this->session->addFlashes('warning', "Votre commentaire est incorrect !");
                 $comments = $this->commentRepository->findByPost($idPost);
                 $response = new Response($this->view->render(
                     [
@@ -77,7 +76,6 @@ final class CommentController
                         'data' => [
                             'post' => $postRepo,
                             'comments' => $comments,
-                            'token' => $token,
                         ],
                     ],
                 ));
