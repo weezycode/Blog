@@ -64,7 +64,7 @@ final class Router
             $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
 
-            $controller = new ArticleController($postRepo, $this->view, $userRepo);
+            $controller = new ArticleController($postRepo, $this->view, $this->session, $this->request);
 
 
             return $controller->displayAllAction();
@@ -75,7 +75,7 @@ final class Router
 
             $postRepo = new ArticleRepository($this->database);
             $userRepo = new UserRepository($this->database);
-            $controller = new ArticleController($postRepo, $this->view, $userRepo);
+            $controller = new ArticleController($postRepo, $this->view, $this->session, $this->request);
 
             $commentRepo = new CommentRepository($this->database);
             return $controller->displayOneAction((int) $this->request->getQuery('id'), $commentRepo);
