@@ -21,7 +21,7 @@ final class SendEmail
     }
 
     /**
-     * Manage Home Form
+     * Manage Home contact Form
      *
      * @param $name
      * @param $lname
@@ -60,6 +60,13 @@ final class SendEmail
             );
         $mailer->send($message);
     }
+
+    /**
+     * Manage register Form
+     *
+     * @param $pseudo
+     * @param $email
+     */
 
     public function SendEmailRegister($pseudo, $email)
     {
