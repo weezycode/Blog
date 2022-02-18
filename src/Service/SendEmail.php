@@ -42,7 +42,7 @@ final class SendEmail
         $message = (new Swift_Message())
             ->attach($cid)
             ->setFrom($email)
-            ->setTo('moudou.openclassrooms@gmail.com')
+            ->setTo('contact@myblog.com')
             ->setBody(
                 $this->view->render(
                     [
@@ -78,7 +78,7 @@ final class SendEmail
         $message = (new Swift_Message())
             ->attach($cid)
             ->setFrom($email)
-            ->setTo('moudou.openclassrooms@gmail.com')
+            ->setTo('contact@myblog.com')
             ->setBody(
                 $this->view->render(
                     [
