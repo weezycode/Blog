@@ -15,7 +15,7 @@ use App\Controller\Frontoffice\Error404Controller;
 
 final class AdminUserController
 {
-    private Response $response;
+
     public function __construct(private Request $request, private UserRepository $userRepository, private View $view, private Session $session, private AccessControl $access)
     {
         $this->infoUser = $this->request->getAllRequest();
@@ -56,9 +56,12 @@ final class AdminUserController
 
             $users = $this->userRepository->findUser();
 
+
             return new Response($this->view->renderAdmin([
                 'template' => 'superAdminPage',
-                'data' => ['users' => $users],
+                'data' => [
+                    'users' => $users
+                ],
 
             ]));
         } else {
@@ -107,7 +110,7 @@ final class AdminUserController
                 $userToAdmin = $request->getRequest('changeToAdmin');
                 $status = "admin";
                 $this->userRepository->updateStatusUser($userToAdmin, $status);
-                $this->session->addFlashes('success', "L'utilisateur est devenu Admin !");
+                $this->session->addFlashes('success', "L'utilisateur est devenu éditeur !");
                 return $response->redirectTo("index.php?action=superAdminPage");
             } elseif ($request->getRequest("changeToMember")) {
                 $userToMember = $request->getRequest('changeToMember');

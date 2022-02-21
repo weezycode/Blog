@@ -24,6 +24,7 @@ final class UserRepository
         $req->execute();
     }
 
+
     public function findUser()
     {
         $req = $this->bdd->prepare('SELECT * FROM user ');
@@ -74,6 +75,15 @@ final class UserRepository
     public function findOneBy(array $criteria, array $orderBy = null): ?User
     {
         $req = $this->bdd->prepare("SELECT * FROM user WHERE email = :email");
+        $data = $req->execute($criteria);
+        $data = $req->fetch();
+
+        return $data == null ? null : new User((int)$data['id'], (string)$data['email'], (string)$data['pseudo'],  (string)$data['passwd'], (string)$data['status'], $data['date_created']);
+    }
+
+    public function findOneById(array $criteria, array $orderBy = null): ?User
+    {
+        $req = $this->bdd->prepare("SELECT * FROM user WHERE id = :id");
         $data = $req->execute($criteria);
         $data = $req->fetch();
 

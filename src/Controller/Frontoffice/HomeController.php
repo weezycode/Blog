@@ -17,8 +17,12 @@ final class HomeController
     public function __construct(private View $view, private Session $session, private Request $request)
     {
     }
+
+
     public function displayIndex(): Response
     {
+
+
         $tokenRand = new Token($this->session, $this->request);
         $tokenRand->genToken();
         return new Response($this->view->render([

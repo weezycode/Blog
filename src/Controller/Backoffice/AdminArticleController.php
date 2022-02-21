@@ -11,6 +11,7 @@ use App\Service\Http\Request;
 use App\Service\AccessControl;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
+use App\Model\Repository\UserRepository;
 use App\Service\FormValidator\ValidForm;
 use App\Model\Repository\ArticleRepository;
 use App\Model\Repository\CommentRepository;
@@ -19,7 +20,7 @@ final class AdminArticleController
 {
     private ?array $infoUser = [];
     private Response $response;
-    public function __construct(private ArticleRepository $postRepository, private View $view, private Session $session, private Request $request, private AccessControl $access)
+    public function __construct(private ArticleRepository $postRepository, private View $view, private Session $session, private Request $request, private AccessControl $access, private UserRepository $userRepository)
     {
         $this->infoUser = $this->request->getAllRequest();
     }
@@ -56,9 +57,15 @@ final class AdminArticleController
         }
         $isAdmin = $this->session->get('user');
 
-        if ($isAdmin->getStatus() === 'admin' || $isAdmin->getStatus() === 'superadmin') {
 
-            return new Response($this->view->renderAdmin(['template' => 'addPost', 'data' => []]));
+
+        if ($isAdmin->getStatus() === 'admin' || $isAdmin->getStatus() === 'superadmin') {
+            $tokenRand = new Token($this->session, $this->request);
+            $tokenRand->genToken();
+            return new Response($this->view->renderAdmin(['template' => 'addPost', 'data' => [
+
+                'token' => $tokenRand->getToken(),
+            ]]));
         } else {
 
             $response->redirectTo("index.php");
@@ -82,7 +89,7 @@ final class AdminArticleController
                 return $this->Admin();
             }
             $tokenRand = new Token($this->session, $this->request);
-            $token = $tokenRand->getToken();
+
 
             if (!$tokenRand->isToken()) {
                 $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
@@ -128,13 +135,19 @@ final class AdminArticleController
         }
         $isAdmin = $this->session->get('user');
         if ($isAdmin->getStatus() === 'admin' || $isAdmin->getStatus() === 'superadmin') {
+            $tokenRand = new Token($this->session, $this->request);
+            $tokenRand->genToken();
+
             $article = $this->postRepository->findOneBy(['id' => $id]);
+            $users = $this->userRepository->findUser();
             if ($article) {
                 return new Response($this->view->renderAdmin(
                     [
                         'template' => 'displayForUpdatePost',
                         'data' => [
                             'post' => $article,
+                            'token' => $tokenRand->getToken(),
+                            'users' => $users,
                         ],
                     ],
                 ));
@@ -161,11 +174,18 @@ final class AdminArticleController
                 $this->session->addFlashes('warning', "Tous les champs ne sont pas remplis ou corrects.");
                 return $this->Admin();
             }
+            $tokenRand = new Token($this->session, $this->request);
+
+            if (!$tokenRand->isToken()) {
+                $this->session->addFlashes('error', 'Votre token n\'est plus correct, veuillez réessayer !');
+                return $response->redirectTo("index.php");
+            }
 
             $idPost = $this->infoUser['id_article'];
             $title = ValidForm::purifyAll($this->infoUser['title']);
             $shortContent = ValidForm::purifyAll($this->infoUser['short_content']);
             $content = (ValidForm::purifyAll($this->infoUser['content']));
+            (int)$idUser = $this->infoUser['id_author'];
 
 
             if (!isset($idPost)) {
@@ -182,7 +202,15 @@ final class AdminArticleController
                     $this->session->addFlashes('warning', "Attention n'essayez pas de modifier l'id de l'utilisateur");
                     return $this->Admin();
                 }
-                $idUser = $isAdmin->getId();
+
+                $user =  $this->userRepository->findOneById(['id' => $this->infoUser['id_author']]);
+                if ($user === null) {
+                    $this->session->addFlashes('error', 'Ne modifiez pas l\'utilisateur !');
+                    return $this->Admin();
+                }
+
+
+
 
 
                 $postRepo = $this->postRepository->findOneBy(['id' => $idPost]);
@@ -196,6 +224,8 @@ final class AdminArticleController
                 return $this->Admin();
             }
             $article = $this->postRepository->findOneBy(['id' => $idPost]);
+
+
             return new Response($this->view->renderAdmin(
                 [
                     'template' => 'displayForUpdatePost',

@@ -11,7 +11,8 @@
                 <th>Commentaire</th>
                 <th>status</th>
                 <th>Date </th>
-              <th>Activé/Supprimer</th>
+              <th>Activé</th>
+              <th>Supprimer</th>
             </tr>
         </thead>
         <tbody>
@@ -28,13 +29,17 @@
                 <form action="index.php?action=isGrantedComment" method ="POST">
                 <input type="hidden" value="{{ comments.id}}"  name="idComment"/>
                 <td><button class="btn btn-success" type ="submit"style="height:50px;">Activé</button></td>
-                </form>
-               {% endif %}   {% if comments.displayStatus == 'granted' %}
+                </form>{% endif %}  
+                {% if comments.displayStatus == 'granted' %}
                <form action="index.php?action=deleteComment" method ="POST">
+                <input type="hidden" value="{{ comments.id}}"  name="idComment"/>
+              <td></td>
+              </form>
+               {% endif %} 
+                  <form action="index.php?action=deleteComment" method ="POST">
                 <input type="hidden" value="{{ comments.id}}"  name="idComment"/>
               <td><button class="btn btn-secondary" style="height:50px;" type="submit" >Supprimer</button></td>
               </form>
-               {% endif %}  
             </tr>
             {% endfor %}
         </tbody>
