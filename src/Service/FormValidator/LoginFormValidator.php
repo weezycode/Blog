@@ -27,14 +27,14 @@ final class LoginFormValidator
 
             $user =  $this->userRepository->findOneBy(['email' => $this->infoUser['email']]);
             if ($user === null) {
-                $this->session->addFlashes('error', 'Cette adresse email n\'existe pas!');
+                $this->session->addFlashes('error', 'Les identifiants sont incorrecrtes !');
                 return false;
             }
         }
 
         $isPasswordCorrect = password_verify($this->infoUser['password'], $user->getPassword());
         if ($isPasswordCorrect === false) {
-            $this->session->addFlashes('error', 'Vérifiez votre mot de passe !');
+            $this->session->addFlashes('error', 'Les identifiants sont incorrecrtes !');
             return false;
         }
 

@@ -14,29 +14,37 @@
             </tr>
         </thead>
          {% for listUser in users %}
+         
+              {% if listUser.status == "member" or listUser.status == "admin"%}
         <tbody>
             <tr>
                 <td>{{ listUser.pseudo }}</td>
                 <td>{{ listUser.email }}</td>
                 <td>{{ listUser.dateInsert | date("d/m/Y") }}</td>
-                <td>{{ listUser.status }}</td>
+                {% if listUser.status == 'member'%}
+                <td>membre</td>         
+                {% else %}
+                <td>Éditeur</td>
+                {% endif %}
                 {% if listUser.status == 'member'%}
                 <form action="index.php?action=changeStatusUser" method ="POST">
                 <input type="hidden" value="{{ listUser.id}}"  name="changeToAdmin"/>
-                  <td><button class="btn btn-secondary" style="height:50px;" type="submit">Mettre en Admin</button></td> 
+                  <td><button class="btn btn-secondary" style="height:50px;" type="submit">Mettre en éditeur</button></td> 
                 </form>
                 {% else %}
                  <form action="index.php?action=changeStatusUser" method ="POST">
                 <input type="hidden" value="{{ listUser.id}}"  name="changeToMember"/>
-                  <td><button class="btn btn-secondary" style="height:50px;" type="submit">Mettre en member</button></td> 
+                  <td><button class="btn btn-secondary" style="height:50px;" type="submit">Mettre en membre</button></td> 
                 </form>
-                 {% endif %}
+                {% endif %}
+                 
                 <form action="index.php?action=deleteMember" method ="POST">
                 <input type="hidden" value="{{ listUser.id}}"  name="idUser"/>
               <td><button class="btn btn-secondary" style="height:50px;" type="submit">Supprimer</button></td> 
               </form>    
             </tr>
         </tbody>
+        {% endif %}
          {% endfor %}
     </table>
 </div>

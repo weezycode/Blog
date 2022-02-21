@@ -121,38 +121,38 @@ final class Router
         } elseif ($action === 'admin') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
 
             return $controller->Admin();
         } elseif ($action === 'displayForUpdatePost' && $this->request->hasQuery('id')) {
-
+            $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
             return $controller->displayForUpdatePost((int) $this->request->getQuery('id'));
 
             // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'updatePost') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
 
             return $controller->updatePost();
         } elseif ($action === 'displayToAddPost') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
 
             return $controller->displayToAddPost();
         } elseif ($action === 'addPost') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
 
             return $controller->addPost();
         } elseif ($action === 'deletePost') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
 
             return $controller->deletePost();
         } elseif ($action === 'displayAllUser') {
@@ -161,21 +161,24 @@ final class Router
 
             return $controller->displayAllUser();
         } elseif ($action === 'listComment') {
+            $userRepo = new UserRepository($this->database);
             $commentRepo = new CommentRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
 
             return $controller->displayAllComment($commentRepo);
         } elseif ($action === 'isGrantedComment') {
+            $userRepo = new UserRepository($this->database);
             $commentRepo = new CommentRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
 
             return $controller->updateCommentStatus($commentRepo);
         } elseif ($action === 'deleteComment') {
+            $userRepo = new UserRepository($this->database);
             $commentRepo = new CommentRepository($this->database);
             $postRepo = new ArticleRepository($this->database);
-            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access);
+            $controller = new AdminArticleController($postRepo, $this->view, $this->session, $this->request, $this->access, $userRepo);
 
             return $controller->deleteComment($commentRepo);
         } elseif ($action === 'superAdminPage') {

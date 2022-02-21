@@ -7,12 +7,19 @@
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="my-5">
                          <h3 class ="text-center" id="contact">Modifier le post</h3>
-                         {% if session.user.id != post.idAuthor %}
-                         <p class="danger"> Attention vous êtes sur le point de modifier le post de @ {{ post.pseudo}}</p> {% endif %}
                         <form action="index.php?action=updatePost" method ="POST" class = "was-valided">
                             <div class="form-floating">
-                                <input type="hidden" value="{{ post.id}}"  name="id_article"/>
-                                <input type="hidden" value="{{session.user.id}}"  name="id_author"/>
+                                <input type="hidden" name="token" value="{{ token }}"/>
+                                <input type="hidden" value="{{ post.id}}"  name="id_article"/>              
+                                 <select class="form-control" name="id_author">               
+                                 {% for auteur in users %}
+                                 {% if auteur.status == "admin" or auteur.status == "superadmin" %}
+                                 <option value = "{{ auteur.id}}"> {{ auteur.pseudo }}</option>
+                                {% endif %}{% endfor %}
+                                </select>
+                                <label for="name">Auteur</label>
+                            </div>
+                             <div class="form-floating">
                                 <input class="form-control" name="title" type="text" value = 
                                 "{{ post.title}}"required />
                                 <label for="name">Titre</label>
