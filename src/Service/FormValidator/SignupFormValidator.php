@@ -54,15 +54,6 @@ final class SignupFormValidator
         if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $password)) {
             return false;
         }
-        // if (!preg_match('/[a-z]/', $password)) {
-        //     return false;
-        // }
-        // if (!preg_match('/[0-9]/', $password)) {
-        //     return false;
-        // }
-        //if (!preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $password)) {
-        //   return false;
-        // }
 
         //fin du check mot de passe 
 
