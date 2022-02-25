@@ -100,11 +100,11 @@ final class AdminArticleController
             $content = (ValidForm::purifyAll($this->infoUser['content']));
 
             if (!isset($title)) {
-                $this->session->addFlashes('warning', "Veuillez vérifier le champ titre, mettez que tu texte !.");
+                $this->session->addFlashes('warning', "Veuillez vérifier le champ titre, mettez que tu texte et au moins 6 carctères !.");
             } elseif (!isset($shortContent)) {
-                $this->session->addFlashes('warning', "Veuillez vérifier le champ châpo, mettez que tu texte.");
+                $this->session->addFlashes('warning', "Veuillez vérifier le champ châpo, mettez que tu texte et au moins 6 carctères .");
             } elseif (!isset($content)) {
-                $this->session->addFlashes('warning', "Veuillez vérifier le champ du post, mettez que tu texte.");
+                $this->session->addFlashes('warning', "Veuillez vérifier le champ du post, mettez que tu texte et au moins 6 carctères .");
             } else {
                 if (!$isAdmin->getId()) {
                     $this->session->addFlashes('warning', "Attention n'essayez pas de modifier l'id de l'utilisateur");
