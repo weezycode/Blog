@@ -1,36 +1,41 @@
- {% extends "/frontoffice/layout.html.twig" %} 
- {% block title %}Incsription{% endblock %}
- {% block content %}
+{% extends "/frontoffice/layout.html.twig" %}
+{% block title %}Incsription{% endblock %}
+{% block content %}
 <div class="login">
- <div class="post-preview">
-                    {% for message in flashes %}
-                        <div class="alert alert-dark alert-dismissible">
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        <strong class="danger">{{ message }} </strong> 
-                    </div> {% endfor %}
-    <form  method="POST">
-        <h2 class="text-center">Se connecter</h2>       
-        <div class="form-group">
-           <label for="email">Adresse email</label>
-            <input type="email" class="form-control formeControl" name="email" value="{{ email }}"  placeholder="Email" required="required">
-        </div>
-        <input type="hidden" name="token" value="{{ token }}"/> 
-        <div class="form-group">
-           <label for="email">Password</label>
-            <input type="password" class="form-control formeControl" name="password" placeholder="Password" required="required">       
-        </div>
-        <div class="form-group text-center">
-            <button type="submit" class="button btn-primary btn-block">Se connecter</button>
-        </div>
-        <div class="clearfix">
-            <p class="text-center">Pas encore de compte ?
-            <a href="index.php?action=sign">Créer un compte</a></p>
-        </div>        
-    </form>   
+    <div class="post-preview">
+        {% for message in flashes %}
+        <div class="alert alert-dark alert-dismissible">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong class="danger">{{ message }} </strong>
+        </div> {% endfor %}
+        <form method="POST">
+            <h2 class="text-center">Se connecter</h2>
+            <div class="form-group">
+                <label for="email">Adresse email</label>
+                <input type="email" class="form-control formeControl" name="email" value="{{ email }}"
+                    placeholder="Email" required="required">
+            </div>
+            <input type="hidden" name="token" value="{{ token }}" />
+            <div class="form-group">
+                <label for="email">Password</label>
+                <input type="password" class="form-control formeControl" name="password" placeholder="Password"
+                    required="required">
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="button btn-primary btn-block">Se connecter</button>
+            </div>
+            <div class="clearfix">
+                <p class="text-center">Pas encore de compte ?
+                    <a href="index.php?action=sign">Créer un compte</a>
+                </p>
+            </div>
+        </form>
+    </div>
 </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="js/scripts.js"></script>  
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
 {% endblock %}

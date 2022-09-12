@@ -1,77 +1,87 @@
-{% extends "/frontoffice/base.html.twig" %} 
+{% extends "/frontoffice/base.html.twig" %}
 {% block title %}post.title{% endblock %}
-{% block content %} 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-lg-12">
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Post content-->
+            <article>
+                <!-- Post header-->
+                <header class="mb-4">
+                    <!-- Post title-->
+                    <h1 class="fw-bolder mb-1 text-center">{{ post.title }}</h1>
+                    <!-- Post meta content-->
+                </header>
+                <!-- Preview image figure-->
+                {# <figure class="mb-4 text-center">
+                    <img class="img-fluid rounded" src="images/MOUDOU.png" alt="..." />
+                </figure> #}
                 <!-- Post content-->
-                <article>
-                    <!-- Post header-->
-                    <header class="mb-4">
-                        <!-- Post title-->
-                        <h1 class="fw-bolder mb-1 text-center">{{ post.title }}</h1>
-                        <!-- Post meta content-->
-                    </header>
-                    <!-- Preview image figure-->
-                    {# <figure class="mb-4 text-center">
-                       <img class="img-fluid rounded"
-                            src="images/MOUDOU.png" alt="..." /></figure> #}
-                    <!-- Post content-->
-                    <section class="mb-5">
-                        <strong class="fs-5 mb-4">{{post.shortContent}}</strong>
-                        <p class="fs-5 mb-4">{{post.content}}</p>
-                        <div class="text-muted fst-italic mb-2">   
-                        {% if post.DateCreated < post.dateUp %}
-                            <em>dernière mise à jour le {{post.dateUp | date("d/m/Y")}}</em>
+                <section class="mb-5">
+                    <strong class="fs-5 mb-4">{{post.shortContent}}</strong>
+                    <p class="fs-5 mb-4">{{post.content}}</p>
+                    <div class="text-muted fst-italic mb-2">
+                        {% if post.DateCreated < post.dateUp %} <em>dernière mise à jour le {{post.dateUp |
+                            date("d/m/Y")}}</em>
                             {% else %}
-                            <em>Publié le {{post.DateCreated | date("d/m/Y")}}</em> 
-                        {% endif %} par {{ post.pseudo}}</div>
-                    </section>
-                </article>
-                <!-- Comments section-->
-            </div>
+                            <em>Publié le {{post.DateCreated | date("d/m/Y")}}</em>
+                            {% endif %} par {{ post.pseudo}}</div>
+                </section>
+            </article>
+            <!-- Comments section-->
         </div>
     </div>
+</div>
 <div class="container mt-5 comment">
     <div class="row d-flex justify-content-center">
         <div class="col-md-8">
             <div class="headings d-flex justify-content-between align-items-center mb-3">
-            {% if comments %}
+                {% if comments %}
                 <h5>Les commentaires</h5>
             </div>
-                {% for comment in comments %}
+            {% for comment in comments %}
             <div class="card p-3 mt-2">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="user d-flex flex-row align-items-center"><span><small class="font-weight-bold text-primary">@{{ comment.pseudoUser }}</small> <small class="font-weight-bold">{{ comment.content }} </small></span> 
-                    </div> 
+                    <div class="user d-flex flex-row align-items-center"><span><small
+                                class="font-weight-bold text-primary">@{{ comment.pseudoUser }}</small> <small
+                                class="font-weight-bold">{{ comment.content }} </small></span>
+                    </div>
                 </div>
-                <em class="text-end date_comment">Le {{ comment.dateComment| date("d/m/Y") }} à {{ comment.dateComment| date("H:i") }}</em>
-            </div>    
-                {% endfor %}
-           
+                <em class="text-end date_comment">Le {{ comment.dateComment| date("d/m/Y") }} à {{ comment.dateComment|
+                    date("H:i") }}</em>
+            </div>
+            {% endfor %}
+
             <div class="bg-light p-2">
-             {% else %}
+                {% else %}
                 <h4>Aucun commentaires</h4>
-            {% endif %}
+                {% endif %}
             </div>
             {% if session.user %}
-        <div class="card p-3 mt-2">
-            <h4> Publier un commentaire </h4>
-                <form action ="index.php?action=addComment" method ="POST">  
+            <div class="card p-3 mt-2">
+                <h4> Publier un commentaire </h4>
+                <form action="index.php?action=addComment" method="POST">
                     <div class="form-group">
-                        <input type="hidden" value="{{ post.id}}"  name="id_article"/>
-                        <input type="hidden" value="{{session.user.id}}"  name="id_user"/> 
-                          <input type="hidden" name="token" value="{{ token }}"/> 
-                    <div class="d-flex flex-row align-items-start">@{{ session.user.pseudo }}
-                    <textarea name="content" id="w3review" rows="4" cols="0"  class="form-control ml-1 shadow-none textarea"></textarea></div>   
-                    <div class="mt-2 text-right"><button class="btn btn-primary btn-sm shadow-none" type="submit">Poster votre commentaire</button>
-               
-        </div>
+                        <input type="hidden" value="{{ post.id}}" name="id_article" />
+                        <input type="hidden" value="{{session.user.id}}" name="id_user" />
+                        <input type="hidden" name="token" value="{{ token }}" />
+                        <div class="d-flex flex-row align-items-start">@{{ session.user.pseudo }}
+                            <textarea name="content" id="w3review" rows="4" cols="0"
+                                class="form-control ml-1 shadow-none textarea"></textarea>
+                        </div>
+                        <div class="mt-2 text-right"><button class="btn btn-primary btn-sm shadow-none"
+                                type="submit">Poster votre commentaire</button>
+
+                        </div>
                 </form>
-            {% else %}
-                <a class ="" href="index.php?action=login"><button class=" text-center btn btn-primary btn-sm shadow-none commentConnect " type="button">Connectez vous pour ajouter un commentaire</button></a>
-            {% endif %}
+                {% else %}
+                <a class="" href="index.php?action=login"><button
+                        class=" text-center btn btn-primary btn-sm shadow-none commentConnect " type="button">Connectez
+                        vous pour ajouter un commentaire</button></a>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div> 
+</div>
+
 {% endblock %}

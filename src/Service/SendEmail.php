@@ -30,8 +30,6 @@ final class SendEmail
      */
 
 
-
-
     public function SendEmail($name, $lname, $email, $message)
     {
 
